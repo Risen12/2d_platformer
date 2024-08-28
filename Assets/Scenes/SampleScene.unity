@@ -407,6 +407,7 @@ GameObject:
   - component: {fileID: 266921407}
   - component: {fileID: 266921406}
   - component: {fileID: 266921408}
+  - component: {fileID: 266921409}
   m_Layer: 0
   m_Name: Homeless
   m_TagString: Untagged
@@ -590,6 +591,18 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &266921409
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 266921402}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d287cac8afa214c45926bf220f4de13b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -741,6 +754,7 @@ GameObject:
   - component: {fileID: 537199389}
   - component: {fileID: 537199390}
   - component: {fileID: 537199391}
+  - component: {fileID: 537199392}
   m_Layer: 0
   m_Name: Homeless
   m_TagString: Untagged
@@ -924,6 +938,18 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &537199392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 537199385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d287cac8afa214c45926bf220f4de13b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -1016,7 +1042,7 @@ GameObject:
   m_Component:
   - component: {fileID: 673642237}
   - component: {fileID: 673642236}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1560,6 +1586,7 @@ GameObject:
   - component: {fileID: 1468248751}
   - component: {fileID: 1468248752}
   - component: {fileID: 1468248753}
+  - component: {fileID: 1468248754}
   m_Layer: 0
   m_Name: Hero
   m_TagString: Untagged
@@ -1768,6 +1795,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _bulletPrefab: {fileID: 8431306239728134868, guid: 011f6777083f89f46b86bffc9bdc5242, type: 3}
+--- !u!114 &1468248754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1468248745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c376b170a19e074c9a56c4aa9b3e7ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1488276015
 GameObject:
   m_ObjectHideFlags: 0
@@ -1987,6 +2026,7 @@ GameObject:
   - component: {fileID: 1738408229}
   - component: {fileID: 1738408228}
   - component: {fileID: 1738408230}
+  - component: {fileID: 1738408231}
   m_Layer: 0
   m_Name: Homeless
   m_TagString: Untagged
@@ -2170,6 +2210,18 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &1738408231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1738408224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d287cac8afa214c45926bf220f4de13b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1761790801
 GameObject:
   m_ObjectHideFlags: 0

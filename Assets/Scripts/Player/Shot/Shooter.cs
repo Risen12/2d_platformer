@@ -1,20 +1,20 @@
+using System;
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Pool;
 
 [RequireComponent(typeof(Animator), typeof(SpriteRenderer))]
 public class Shooter : MonoBehaviour
 {
-    private const string AttackTriggerParamName = "Attack";
-
     [SerializeField] private Bullet _bulletPrefab;
 
-    private Animator _animator;
     private SpriteRenderer _spriteRenderer;
     private ObjectPool<Bullet> _bulletPool;
     private int _bulletCount;
     private Coroutine _animationBeforeShot;
+    private WaitForSeconds _delayBeforeShot;
+
+    public event Action OnAttacked;
 
     private void OnDisable()
     {
@@ -22,8 +22,10 @@ public class Shooter : MonoBehaviour
             StopCoroutine(_animationBeforeShot);
     }
 
-    private void Start()
+    private void Awake()
     {
+        float delay = 0.37f;
+        _delayBeforeShot = new WaitForSeconds(delay);
         _bulletCount = 30;
         _bulletPool = new ObjectPool<Bullet>(
             createFunc: CreateBullet,
@@ -35,7 +37,6 @@ public class Shooter : MonoBehaviour
             maxSize: _bulletCount
             );
 
-        _animator = GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
@@ -46,17 +47,16 @@ public class Shooter : MonoBehaviour
 
     private void Shot()
     {
-        float animationTime = 0.37f;
-        KeyCode fireKey = KeyCode.F;
+        KeyCode attackButton = KeyCode.F;
 
-        if (Input.GetKeyDown(fireKey))
+        if (Input.GetKeyDown(attackButton))
         {
-            _animator.SetTrigger(AttackTriggerParamName);
+            OnAttacked?.Invoke();
 
             if(_animationBeforeShot != null)
                 StopCoroutine( _animationBeforeShot);
 
-            _animationBeforeShot = StartCoroutine(ShotAfterAnimation(animationTime));
+            _animationBeforeShot = StartCoroutine(ShotAfterAnimation());
         }
     }
 
@@ -67,6 +67,7 @@ public class Shooter : MonoBehaviour
         bullet.gameObject.SetActive(true);
 
         Vector2 direction;
+
         if (_spriteRenderer.flipX)
             direction = Vector2.left;
         else
@@ -99,11 +100,9 @@ public class Shooter : MonoBehaviour
         _bulletPool.Release(bullet);
     }
 
-    private IEnumerator ShotAfterAnimation(float delay)
+    private IEnumerator ShotAfterAnimation()
     {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(delay);
-
-        yield return waitForSeconds;
+        yield return _delayBeforeShot;
         _bulletPool.Get();
     }
 }

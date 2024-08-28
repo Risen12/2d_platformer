@@ -1,39 +1,38 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Animator), typeof(SpriteRenderer), typeof(BoxCollider2D))]
 public class Enemy : MonoBehaviour
 {
-    private const string MoveAnimatorBoolName = "isMoving";
-    private const string DieTriggerName = "Die";
-
     [SerializeField] private Transform _rightPatrolBorderPoint;
     [SerializeField] private Transform _leftPatrolBorderPoint;
     [SerializeField] private float _moveSpeed;
     [SerializeField] private float _timeForIdle;
 
-    private Animator _animator;
     private SpriteRenderer _spriteRenderer;
     private BoxCollider2D _boxCollider;
     private Vector2 _currentDirection;
     private bool _isMoving;
-    private Coroutine _waitPatrolCoroutine;
-    private Coroutine _waitCoroutine;
+    private Coroutine _patrolCoroutine;
+    private WaitForSeconds _patrol;
+    private WaitForSeconds _delayBeforeDeath;
 
-    private void OnDisable()
-    {
-        StopAllCoroutines();
-    }
+    public event Action<bool> OnMoved;
+    public event Action OnDie;
 
-    private void Start()
+    private void Awake()
     {
-        _animator = GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _boxCollider = GetComponent<BoxCollider2D>();
 
+        float delay = 1f;
+        _patrol = new WaitForSeconds(_timeForIdle);
+        _delayBeforeDeath = new WaitForSeconds(delay);
+        
         _currentDirection = Vector2.right;
         _isMoving = true;
-        _animator.SetBool(MoveAnimatorBoolName, _isMoving);
+        OnMoved?.Invoke(_isMoving);
     }
 
     private void Update()
@@ -56,68 +55,51 @@ public class Enemy : MonoBehaviour
 
     private IEnumerator WaitPatrol()
     {
-        WaitForSeconds wait = new WaitForSeconds(_timeForIdle);
-
         _isMoving = false;
-        _animator.SetBool(MoveAnimatorBoolName, _isMoving);
+        OnMoved?.Invoke(_isMoving);
 
-        yield return wait;
+        yield return _patrol;
 
         _isMoving = true;
-        _animator.SetBool(MoveAnimatorBoolName, _isMoving);
-
-        yield break;
+        OnMoved?.Invoke(_isMoving);
     }
 
-    private IEnumerator Wait()
+    private IEnumerator WaitDelayBeforeDeath()
     {
-        float delayDie = 1f;
-        WaitForSeconds wait = new WaitForSeconds(delayDie);
-
-        yield return wait;
+        yield return _delayBeforeDeath;
 
         gameObject.SetActive(false);
-
-        yield break;
     }
 
     private void Move()
     {
         if (_isMoving)
-        {
             transform.Translate(_currentDirection * _moveSpeed * Time.deltaTime);
-        }
     }
 
     private void Die()
     {
         float colliderSizeY = 0.25f;
         _isMoving = false;
-        _animator.SetBool(MoveAnimatorBoolName, _isMoving);
+        OnMoved?.Invoke(_isMoving);
 
-        if (_waitPatrolCoroutine != null)
-        {
-            StopCoroutine(_waitPatrolCoroutine);
-        }
+        if (_patrolCoroutine != null)
+            StopCoroutine(_patrolCoroutine);
 
-        _animator.SetTrigger(DieTriggerName);
+        OnDie?.Invoke();
         _boxCollider.size = new Vector2(_boxCollider.size.x, colliderSizeY);
 
-        _waitCoroutine = StartCoroutine(Wait());
+        StartCoroutine(WaitDelayBeforeDeath());
     }
 
     private void OnPointReached(Transform point)
     {
-        _waitPatrolCoroutine = StartCoroutine(WaitPatrol());
+        _patrolCoroutine = StartCoroutine(WaitPatrol());
 
         if (point == _rightPatrolBorderPoint)
-        {
             ChangeDirection(Vector2.left);
-        }
         else
-        {
             ChangeDirection(Vector2.right);
-        }
     }
 
     private void ChangeDirection(Vector2 direction)

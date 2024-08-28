@@ -4,6 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D), typeof(SpriteRenderer))]
 public class Bullet : MonoBehaviour
 {
+    private const string GroundLayerName = "Ground";
     [SerializeField] private float _speed;
 
     private Rigidbody2D _rigidbody2D;
@@ -19,7 +20,7 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.TryGetComponent(out Enemy enemy) || collision.gameObject.layer == 6)
+        if (collision.gameObject.TryGetComponent(out Enemy enemy) || collision.gameObject.layer == LayerMask.NameToLayer(GroundLayerName))
         {
             CollisionHappened?.Invoke(this);
         }
