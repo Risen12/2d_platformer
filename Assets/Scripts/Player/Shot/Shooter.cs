@@ -3,12 +3,13 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Pool;
 
-[RequireComponent(typeof(Animator), typeof(SpriteRenderer))]
+[RequireComponent(typeof(SpriteRenderer), typeof(AudioSource))]
 public class Shooter : MonoBehaviour
 {
     [SerializeField] private Bullet _bulletPrefab;
 
     private SpriteRenderer _spriteRenderer;
+    private AudioSource _audioSource;
     private ObjectPool<Bullet> _bulletPool;
     private int _bulletCount;
     private Coroutine _animationBeforeShot;
@@ -38,6 +39,7 @@ public class Shooter : MonoBehaviour
             );
 
         _spriteRenderer = GetComponent<SpriteRenderer>();
+        _audioSource = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -104,5 +106,6 @@ public class Shooter : MonoBehaviour
     {
         yield return _delayBeforeShot;
         _bulletPool.Get();
+        _audioSource.Play();
     }
 }

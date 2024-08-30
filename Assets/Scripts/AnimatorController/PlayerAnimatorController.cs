@@ -17,10 +17,10 @@ public class PlayerAnimatorController : MonoBehaviour
 
     private void OnDisable()
     {
-        _mover.OnJumped -= OnJumped;
-        _mover.OnMoved -= OnMoved;
-        _mover.OnRan -= OnRan;
-        _mover.OnGroundStateChanged -= OnGroundStateChanged;
+        _mover.Jumped -= OnJumped;
+        _mover.Moved -= OnMoved;
+        _mover.Ran -= OnRan;
+        _mover.GroundStateChanged -= OnGroundStateChanged;
 
         _shooter.OnAttacked -= OnAttacked;
     }
@@ -31,10 +31,10 @@ public class PlayerAnimatorController : MonoBehaviour
         _shooter = GetComponent<Shooter>();
         _animator = GetComponent<Animator>();
 
-        _mover.OnJumped += OnJumped;
-        _mover.OnMoved += OnMoved;
-        _mover.OnRan += OnRan;
-        _mover.OnGroundStateChanged += OnGroundStateChanged;
+        _mover.Jumped += OnJumped;
+        _mover.Moved += OnMoved;
+        _mover.Ran += OnRan;
+        _mover.GroundStateChanged += OnGroundStateChanged;
 
         _shooter.OnAttacked += OnAttacked;
 

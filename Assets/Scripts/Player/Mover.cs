@@ -17,10 +17,10 @@ public class Mover : MonoBehaviour
     private bool _isRunning;
     private bool _isGrounded;
 
-    public event Action<bool> OnGroundStateChanged;
-    public event Action OnJumped;
-    public event Action<bool> OnMoved;
-    public event Action<bool> OnRan;
+    public event Action<bool> GroundStateChanged;
+    public event Action Jumped;
+    public event Action<bool> Moved;
+    public event Action<bool> Ran;
 
     private void Awake()
     {
@@ -50,7 +50,7 @@ public class Mover : MonoBehaviour
         }
         else
         {
-            OnMoved?.Invoke(false);
+            Moved?.Invoke(false);
         }
 
         Run();
@@ -83,7 +83,7 @@ public class Mover : MonoBehaviour
             _isRunning = false;
         }
 
-        OnRan?.Invoke(_isRunning);
+        Ran?.Invoke(_isRunning);
     }
 
     private void Jump()
@@ -95,14 +95,14 @@ public class Mover : MonoBehaviour
             if (_isGrounded)
             {
                 _rigidbody.AddForce(Vector2.up * _jumpSpeed);
-                OnJumped?.Invoke();
+                Jumped?.Invoke();
             }
         }
     }
 
     private void OnMovedStarted(bool FlipX)
     {
-        OnMoved?.Invoke(true);
+        Moved?.Invoke(true);
         _spriteRenderer.flipX = FlipX;
     }
 
@@ -125,6 +125,6 @@ public class Mover : MonoBehaviour
     private void OnGroundedStateChanged(bool state)
     { 
         _isGrounded = state;
-        OnGroundStateChanged?.Invoke(state);
+        GroundStateChanged?.Invoke(state);
     }
 }

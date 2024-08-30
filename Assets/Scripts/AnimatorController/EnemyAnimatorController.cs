@@ -1,30 +1,32 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Animator)), RequireComponent(typeof(Enemy))]
+[RequireComponent(typeof(EnemyMover), typeof(Enemy), typeof(Animator))]
 public class EnemyAnimatorController : MonoBehaviour
 {
     private readonly int MoveParamHash = Animator.StringToHash("isMoving");
     private readonly int DieParamHash = Animator.StringToHash("Die");
 
     private Animator _animator;
+    private EnemyMover _enemyMover;
     private Enemy _enemy;
 
     private void OnDisable()
     {
-        _enemy.OnDie -= OnDie;
-        _enemy.OnMoved -= OnMove;
+        _enemy.Died -= OnDied;
+        _enemyMover.Moved -= OnMove;
     }
 
     private void Awake()
     {
         _animator = GetComponent<Animator>();
         _enemy = GetComponent<Enemy>();
+        _enemyMover = GetComponent<EnemyMover>();
 
-        _enemy.OnDie += OnDie;
-        _enemy.OnMoved += OnMove;
+        _enemy.Died += OnDied;
+        _enemyMover.Moved += OnMove;
     }
 
-    private void OnDie()
+    private void OnDied()
     {
         _animator.SetTrigger(DieParamHash);
     }
