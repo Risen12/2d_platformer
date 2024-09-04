@@ -6,21 +6,26 @@ public class Mover : MonoBehaviour
 {
     private const string HorizontalAxis = "Horizontal";
     private const string VerticalAxis = "Vertical";
-    private const string GroundLayerName = "Ground";
 
     [SerializeField] private float _walkSpeed;
     [SerializeField] private float _jumpSpeed;
     [SerializeField] private float _runSpeed;
+    [SerializeField] private Transform _groundVerifier;
+    [SerializeField] private LayerMask _groundLayer;
 
     private SpriteRenderer _spriteRenderer;
     private Rigidbody2D _rigidbody;
     private bool _isRunning;
     private bool _isGrounded;
+    private bool _isMoving;
 
-    public event Action<bool> GroundStateChanged;
     public event Action Jumped;
     public event Action<bool> Moved;
     public event Action<bool> Ran;
+    public event Action<bool> GroundStateChanged;
+
+    public bool IsGrounded => _isGrounded;
+    public bool IsMoving => _isMoving;
 
     private void Awake()
     {
@@ -34,6 +39,11 @@ public class Mover : MonoBehaviour
     {
         Move();
         Jump();
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        VerifyGroundedState();
     }
 
     private void Move()
@@ -50,10 +60,12 @@ public class Mover : MonoBehaviour
         }
         else
         {
+            _isMoving = false;
             Moved?.Invoke(false);
         }
 
-        Run();
+        if(_isGrounded)
+            Run();
 
         if (_isRunning)
         {
@@ -92,9 +104,11 @@ public class Mover : MonoBehaviour
 
         if (axis > 0)
         {
+            VerifyGroundedState();
+
             if (_isGrounded)
             {
-                _rigidbody.AddForce(Vector2.up * _jumpSpeed);
+                _rigidbody.velocity = new Vector2(_rigidbody.velocity.x, _jumpSpeed);
                 Jumped?.Invoke();
             }
         }
@@ -102,29 +116,26 @@ public class Mover : MonoBehaviour
 
     private void OnMovedStarted(bool FlipX)
     {
-        Moved?.Invoke(true);
+        _isMoving = true;
+        Moved?.Invoke(_isMoving);
         _spriteRenderer.flipX = FlipX;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void VerifyGroundedState()
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer(GroundLayerName))
-        {
-            OnGroundedStateChanged(true);
-        }
+        float colliderSizeX = 0.4f;
+        float colliderSizeY = 0.1f;
+
+        _isGrounded = Physics2D.OverlapCapsule(_groundVerifier.position, new Vector2(colliderSizeX, colliderSizeY), CapsuleDirection2D.Horizontal, 0f, _groundLayer);
+
+        GroundStateChanged?.Invoke(_isGrounded);
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        if (collision.gameObject.layer == LayerMask.NameToLayer(GroundLayerName))
-        {
-            OnGroundedStateChanged(false);
-        }
-    }
-
-    private void OnGroundedStateChanged(bool state)
+    public Vector2 GetCurrentDirection()
     { 
-        _isGrounded = state;
-        GroundStateChanged?.Invoke(state);
+        float directionX = Input.GetAxisRaw(HorizontalAxis);
+        float directionY = Input.GetAxisRaw(VerticalAxis);
+
+        return new Vector2(directionX, directionY);
     }
 }

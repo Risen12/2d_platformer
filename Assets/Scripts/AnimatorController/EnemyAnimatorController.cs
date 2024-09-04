@@ -5,6 +5,8 @@ public class EnemyAnimatorController : MonoBehaviour
 {
     private readonly int MoveParamHash = Animator.StringToHash("isMoving");
     private readonly int DieParamHash = Animator.StringToHash("Die");
+    private readonly int AttackParamHash = Animator.StringToHash("Attack");
+    private readonly int HurtParamHash = Animator.StringToHash("IsAttacked");
 
     private Animator _animator;
     private EnemyMover _enemyMover;
@@ -14,6 +16,8 @@ public class EnemyAnimatorController : MonoBehaviour
     {
         _enemy.Died -= OnDied;
         _enemyMover.Moved -= OnMove;
+        _enemy.Attacked -= OnAttacked;
+        _enemy.DamageTaken -= OnDamageTaken;
     }
 
     private void Awake()
@@ -24,6 +28,8 @@ public class EnemyAnimatorController : MonoBehaviour
 
         _enemy.Died += OnDied;
         _enemyMover.Moved += OnMove;
+        _enemy.Attacked += OnAttacked;
+        _enemy.DamageTaken += OnDamageTaken;
     }
 
     private void OnDied()
@@ -34,5 +40,15 @@ public class EnemyAnimatorController : MonoBehaviour
     private void OnMove(bool state)
     {
         _animator.SetBool(MoveParamHash, state);
+    }
+
+    private void OnDamageTaken()
+    {
+        _animator.SetTrigger(HurtParamHash);
+    }
+
+    private void OnAttacked()
+    {
+        _animator.SetTrigger(AttackParamHash);
     }
 }

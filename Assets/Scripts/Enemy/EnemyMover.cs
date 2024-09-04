@@ -1,31 +1,25 @@
 using System;
-using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
 public class EnemyMover : MonoBehaviour
 {
     [SerializeField] private float _moveSpeed;
-    [SerializeField] private float _timeIdle;
-    [SerializeField] private Transform _rightPatrolBorderPoint;
-    [SerializeField] private Transform _leftPatrolBorderPoint;
+    [SerializeField] private float _leftMapBorder;
+    [SerializeField] private float _rightMapBorder;
 
     private SpriteRenderer _spriteRenderer;
     private Vector2 _currentDirection;
     private bool _isMoving;
-    private WaitForSeconds _patrol;
 
     public event Action<bool> Moved;
-    public event Action StayEnded;
 
     private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _currentDirection = Vector2.right;
-        _isMoving = true;
-        Moved?.Invoke(_isMoving);
 
-        _patrol = new WaitForSeconds(_timeIdle);
+        ChangeMoveState(true);
     }
 
     private void Update()
@@ -34,26 +28,33 @@ public class EnemyMover : MonoBehaviour
             Move();
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.TryGetComponent(out PatrolPoint point))
+        if (collision.gameObject.TryGetComponent(out MapBorder mapBorder))
         {
-            OnPointReached(point.transform);
+            if (_spriteRenderer.flipX)
+                ChangeDirection(Vector2.right);
+            else
+                ChangeDirection(Vector2.left);
         }
+    }
+
+    private void ChangeMoveState(bool state)
+    {
+        _isMoving = state;
+        Moved?.Invoke(_isMoving);
     }
 
     public void Move()
     {
-        _isMoving = true;
-        Moved?.Invoke(_isMoving);
+        ChangeMoveState(true);
 
         transform.Translate(_currentDirection * _moveSpeed * Time.deltaTime);
     }
 
     public void Stop()
     {
-        _isMoving = false;
-        Moved?.Invoke(_isMoving);
+        ChangeMoveState(false);
     }
 
     public void ChangeDirection(Vector2 direction)
@@ -70,29 +71,11 @@ public class EnemyMover : MonoBehaviour
         }
     }
 
-    private IEnumerator WaitPatrol()
+    public void MoveToPlayer(Vector2 direction)
     {
-        Stop();
-
-        yield return _patrol;
-
-        Move();
-        StayEnded?.Invoke();
+        ChangeMoveState(true);
+        ChangeDirection(direction);
     }
 
-    private void OnPointReached(Transform point)
-    {
-        Stay();
-
-        if (point == _rightPatrolBorderPoint)
-            ChangeDirection(Vector2.left);
-        else
-            ChangeDirection(Vector2.right);
-    }
-
-    private void Stay()
-    {
-        StartCoroutine(WaitPatrol());
-    }
-
+    public bool GetRotation() => _spriteRenderer.flipX;
 }
