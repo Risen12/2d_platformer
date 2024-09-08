@@ -15,8 +15,8 @@ public class EnemyAnimatorController : MonoBehaviour
     private void OnDisable()
     {
         _enemy.Died -= OnDied;
-        _enemyMover.Moved -= OnMove;
-        _enemy.Attacked -= OnAttacked;
+        _enemyMover.MoveStateChanged -= OnMoveStateChanged;
+        _enemy.Attacking -= OnAttacked;
         _enemy.DamageTaken -= OnDamageTaken;
     }
 
@@ -27,17 +27,18 @@ public class EnemyAnimatorController : MonoBehaviour
         _enemyMover = GetComponent<EnemyMover>();
 
         _enemy.Died += OnDied;
-        _enemyMover.Moved += OnMove;
-        _enemy.Attacked += OnAttacked;
+        _enemyMover.MoveStateChanged += OnMoveStateChanged;
+        _enemy.Attacking += OnAttacked;
         _enemy.DamageTaken += OnDamageTaken;
     }
+
 
     private void OnDied()
     {
         _animator.SetTrigger(DieParamHash);
     }
 
-    private void OnMove(bool state)
+    private void OnMoveStateChanged(bool state)
     {
         _animator.SetBool(MoveParamHash, state);
     }

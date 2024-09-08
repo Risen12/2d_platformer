@@ -130,9 +130,9 @@ public class Attacker: MonoBehaviour , IDamagable
     {
         Debug.Log("Ударили");
 
-        if (_health - damage > 0)
-            _health -= damage;
-        else
+        _health -= damage;
+
+        if (_health <= 0)
             Die();
 
         DamageTaken?.Invoke();

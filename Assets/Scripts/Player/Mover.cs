@@ -12,6 +12,7 @@ public class Mover : MonoBehaviour
     [SerializeField] private float _runSpeed;
     [SerializeField] private Transform _groundVerifier;
     [SerializeField] private LayerMask _groundLayer;
+    [SerializeField] private LayerMask _platformLayer;
 
     private SpriteRenderer _spriteRenderer;
     private Rigidbody2D _rigidbody;
@@ -126,10 +127,12 @@ public class Mover : MonoBehaviour
         float colliderSizeX = 0.4f;
         float colliderSizeY = 0.1f;
 
-        _isGrounded = Physics2D.OverlapCapsule(_groundVerifier.position, new Vector2(colliderSizeX, colliderSizeY), CapsuleDirection2D.Horizontal, 0f, _groundLayer);
+        _isGrounded = Physics2D.OverlapCapsule(_groundVerifier.position, new Vector2(colliderSizeX, colliderSizeY), CapsuleDirection2D.Horizontal, 0f, _groundLayer) ||
+        Physics2D.OverlapCapsule(_groundVerifier.position, new Vector2(colliderSizeX, colliderSizeY), CapsuleDirection2D.Horizontal, 0f, _platformLayer);
 
         GroundStateChanged?.Invoke(_isGrounded);
     }
+
 
     public Vector2 GetCurrentDirection()
     { 

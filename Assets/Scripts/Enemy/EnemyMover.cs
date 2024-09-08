@@ -1,24 +1,23 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
 public class EnemyMover : MonoBehaviour
 {
     [SerializeField] private float _moveSpeed;
-    [SerializeField] private float _leftMapBorder;
-    [SerializeField] private float _rightMapBorder;
+    [SerializeField] private VisibleZone _visibleZone;
+    [SerializeField] private AttackPoint _attackPoint;
 
-    private SpriteRenderer _spriteRenderer;
     private Vector2 _currentDirection;
+    private WaitForSeconds _stopDelay;
     private bool _isMoving;
 
-    public event Action<bool> Moved;
+    public event Action<bool> MoveStateChanged;
 
     private void Awake()
     {
-        _spriteRenderer = GetComponent<SpriteRenderer>();
         _currentDirection = Vector2.right;
-
         ChangeMoveState(true);
     }
 
@@ -28,54 +27,59 @@ public class EnemyMover : MonoBehaviour
             Move();
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.TryGetComponent(out MapBorder mapBorder))
         {
-            if (_spriteRenderer.flipX)
-                ChangeDirection(Vector2.right);
-            else
-                ChangeDirection(Vector2.left);
+            ChangeDirection(_currentDirection * -1);
         }
     }
 
-    private void ChangeMoveState(bool state)
+    private void Move()
     {
-        _isMoving = state;
-        Moved?.Invoke(_isMoving);
-    }
-
-    public void Move()
-    {
-        ChangeMoveState(true);
-
         transform.Translate(_currentDirection * _moveSpeed * Time.deltaTime);
     }
 
-    public void Stop()
+    private IEnumerator WaitStopDelay()
     {
         ChangeMoveState(false);
+
+        yield return _stopDelay;
+
+        ChangeMoveState(true);
+    }
+
+    public void ChangeMoveState(bool state)
+    {
+        MoveStateChanged?.Invoke(state);
+        _isMoving = state;
+    }
+
+    public void Stop(float delay = 0f)
+    {
+        if (delay > 0f)
+        {
+            _stopDelay = new WaitForSeconds(delay);
+            StartCoroutine(WaitStopDelay());
+        }
+        else
+        {
+            ChangeMoveState(false);
+        }
     }
 
     public void ChangeDirection(Vector2 direction)
     {
-        if (direction == Vector2.right)
+        float rotationY = -180;
+        Quaternion leftRotation = Quaternion.Euler(0, rotationY, 0);
+
+        if (direction.x > 0)
         {
-            _spriteRenderer.flipX = false;
-            _currentDirection = Vector2.right;
+            transform.rotation = Quaternion.identity;
         }
         else
         {
-            _spriteRenderer.flipX = true;
-            _currentDirection = Vector2.left;
+            transform.rotation = leftRotation;
         }
     }
-
-    public void MoveToPlayer(Vector2 direction)
-    {
-        ChangeMoveState(true);
-        ChangeDirection(direction);
-    }
-
-    public bool GetRotation() => _spriteRenderer.flipX;
 }

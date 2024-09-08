@@ -1,90 +1,71 @@
-using System;
-using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(EnemyMover), typeof(Animator))]
+[RequireComponent(typeof(EnemyMover))]
 public class Patroler : MonoBehaviour
 {
-    [SerializeField] private Transform _rightPatrolBorderPoint;
-    [SerializeField] private Transform _leftPatrolBorderPoint;
-    [SerializeField] private float _timeIdle;
+    [SerializeField] private Transform _leftPatrolPoint;
+    [SerializeField] private Transform _rightPatrolPoint;
     [SerializeField] private VisibleZone _visibleZone;
+    [SerializeField] private float _patrolDelay;
 
-    private WaitForSeconds _patrol;
-    private EnemyMover _mover;
+    private EnemyMover _enemyMover;
     private bool _isChasing;
-
-    public event Action CanAttack;
 
     private void Awake()
     {
-        _patrol = new WaitForSeconds(_timeIdle);
-        _mover = GetComponent<EnemyMover>();
-    }
+        _isChasing = false;
+        _enemyMover = GetComponent<EnemyMover>();
 
-    private void OnEnable()
-    {
-        _visibleZone.EnemyExited += StopChasePlayer;
-        _visibleZone.EnemyEntered += ChasePlayer;
+        _visibleZone.EnemyEntered += onEnemyEntered;
+        _visibleZone.EnemyExited += OnEnemyExited;
     }
 
     private void OnDisable()
     {
-        _visibleZone.EnemyExited -= StopChasePlayer;
-        _visibleZone.EnemyEntered -= ChasePlayer;
+        _visibleZone.EnemyEntered -= onEnemyEntered;
+        _visibleZone.EnemyExited -= OnEnemyExited;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.TryGetComponent(out PatrolPoint point))
+        if (_isChasing == false)
         {
-            if(_isChasing == false)
-                OnPointReached(point.transform);
+            if (collision.gameObject.TryGetComponent(out PatrolPoint patrolPoint))
+            {
+                OnPointReached(patrolPoint.transform);
+            }
         }
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.TryGetComponent(out Attacker attacker))
-        {
-            CanAttack?.Invoke();
-        }
-    }
-
-    private IEnumerator WaitPatrol()
-    {
-        _mover.Stop();
-
-        yield return _patrol;
-
-        _mover.Move();
     }
 
     private void OnPointReached(Transform point)
     {
-        Stay();
-
-        if (point == _rightPatrolBorderPoint)
-            _mover.ChangeDirection(Vector2.left);
-        else
-            _mover.ChangeDirection(Vector2.right);
-
-        _visibleZone.Rotate(_mover.GetRotation());
+        if (point.localPosition == _leftPatrolPoint.localPosition)
+        {
+            HandleOnReachedPoint(Vector2.right);
+        }
+        if (point.localPosition == _rightPatrolPoint.localPosition)
+        {
+            HandleOnReachedPoint(Vector2.left);
+        }
     }
 
-    private void Stay()
+    private void HandleOnReachedPoint(Vector2 nextDirection)
     {
-        StartCoroutine(WaitPatrol());
+        _enemyMover.ChangeDirection(nextDirection);
+        _enemyMover.Stop(_patrolDelay);
     }
 
-    private void ChasePlayer(Vector2 direction)
+    private void onEnemyEntered(Vector2 playerPosition)
     {
-        _visibleZone.Rotate(_mover.GetRotation());
-        _mover.MoveToPlayer(direction);
+        Vector2 currentPosition = new Vector2(transform.position.x, transform.position.y);
+        Vector2 direction = (playerPosition - currentPosition).normalized;
+
+        _enemyMover.ChangeMoveState(true);
+        _enemyMover.ChangeDirection(direction);
         _isChasing = true;
     }
 
-    private void StopChasePlayer()
+    private void OnEnemyExited() 
     {
         _isChasing = false;
     }
