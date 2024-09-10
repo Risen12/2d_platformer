@@ -1,25 +1,26 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Pool;
 
-[RequireComponent(typeof(SpriteRenderer), typeof(AudioSource), typeof(Mover))]
-public class Attacker: MonoBehaviour , IDamagable
+[RequireComponent(typeof(Mover))]
+public class Attacker : MonoBehaviour, IDamagable
 {
-    [SerializeField] private Bullet _bulletPrefab;
     [SerializeField] private float _maxHealth = 100f;
+    [SerializeField] private MySceneManager _mySceneManager;
+    [SerializeField] private BulletSpawner _bulletSpawner;
 
-    private SpriteRenderer _spriteRenderer;
-    private AudioSource _audioSource;
     private Mover _mover;
-    private ObjectPool<Bullet> _bulletPool;
-    private int _bulletCount;
     private Coroutine _animationBeforeShot;
     private WaitForSeconds _delayBeforeShot;
+    private WaitForSeconds _delayBeforeDie;
     private float _health;
 
-    public event Action OnAttacked;
+    public event Action Attacked;
     public event Action DamageTaken;
+    public event Action Died;
+
+    public float MaxHealth => _maxHealth;
+    public float CurrentHealth => _health;
 
     private void OnDisable()
     {
@@ -31,19 +32,10 @@ public class Attacker: MonoBehaviour , IDamagable
     {
         float delay = 0.37f;
         _delayBeforeShot = new WaitForSeconds(delay);
-        _bulletCount = 30;
-        _bulletPool = new ObjectPool<Bullet>(
-            createFunc: CreateBullet,
-            actionOnGet: GetBullet,
-            actionOnRelease: ReleaseBullet,
-            actionOnDestroy: (bullet) => Destroy(bullet),
-            collectionCheck: false,
-            defaultCapacity: _bulletCount,
-            maxSize: _bulletCount
-            );
 
-        _spriteRenderer = GetComponent<SpriteRenderer>();
-        _audioSource = GetComponent<AudioSource>();
+        float _dieDelay = 0.6f;
+        _delayBeforeDie = new WaitForSeconds(_dieDelay);
+
         _mover = GetComponent<Mover>();
 
         _health = _maxHealth;
@@ -60,7 +52,7 @@ public class Attacker: MonoBehaviour , IDamagable
 
         if (Input.GetKeyDown(attackButton) && _mover.IsGrounded && _mover.IsMoving == false)
         {
-            OnAttacked?.Invoke();
+            Attacked?.Invoke();
 
             if(_animationBeforeShot != null)
                 StopCoroutine( _animationBeforeShot);
@@ -69,72 +61,40 @@ public class Attacker: MonoBehaviour , IDamagable
         }
     }
 
-    private void GetBullet(Bullet bullet)
-    {
-        bullet.transform.position = GetStartPosition(_spriteRenderer.flipX);
-        bullet.SetDirection(_spriteRenderer.flipX);
-        bullet.gameObject.SetActive(true);
-
-        Vector2 direction;
-
-        if (_spriteRenderer.flipX)
-            direction = Vector2.left;
-        else
-            direction = Vector2.right;
-
-        bullet.AddForce(direction);
-
-        bullet.CollisionHappened += OnBulletCollide;
-    }
-
-    private Bullet CreateBullet() => Instantiate( _bulletPrefab, transform);
-
-    private void ReleaseBullet(Bullet bullet)
-    {
-        bullet.CollisionHappened -= OnBulletCollide;
-        bullet.gameObject.SetActive(false);
-    }
-
-    private Vector3 GetStartPosition(bool flipX)
-    {
-        float offsetX = 0.3f;
-        float offsetY = 0.4f;
-
-        Vector3 startPosition;
-        if (flipX)
-            startPosition = new Vector3(transform.position.x - offsetX, transform.position.y + offsetY, transform.position.z);
-        else
-            startPosition = new Vector3(transform.position.x + offsetX, transform.position.y + offsetY, transform.position.z);
-
-        return startPosition;
-    }
-
-    private void OnBulletCollide(Bullet bullet)
-    {
-        _bulletPool.Release(bullet);
-    }
-
     private IEnumerator ShotAfterAnimation()
     {
         yield return _delayBeforeShot;
-        _bulletPool.Get();
-        _audioSource.Play();
+        _bulletSpawner.GetBullet();
     }
 
-    private void Die()
-    { 
-        
+    private IEnumerator HandleDie()
+    {
+        Died?.Invoke();
+        _mover.Stop(true);
+
+        yield return _delayBeforeDie;
+
+        gameObject.SetActive(false);
+        _mySceneManager.ReloadLevel();
     }
 
     public void TakeDamage(float damage)
     {
-        Debug.Log("Ударили");
+        _mover.Stop(true);
 
         _health -= damage;
 
         if (_health <= 0)
-            Die();
+            StartCoroutine(HandleDie());
 
         DamageTaken?.Invoke();
+    }
+
+    public void UseFirstAidKit(float healthPoints)
+    {
+        if (_health + healthPoints > _maxHealth)
+            _health = _maxHealth;
+        else
+            _health += healthPoints;
     }
 }

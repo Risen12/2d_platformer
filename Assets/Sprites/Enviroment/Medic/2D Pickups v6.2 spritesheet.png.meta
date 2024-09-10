@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 490a2d18c380c1f43a67605b0b11e312
+guid: 9dfa1f75ceea12a4d83f5d53bd503a38
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -97,13 +97,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Dead_0
+      name: 2D Pickups v6.2 spritesheet_0
       rect:
         serializedVersion: 2
-        x: 45
-        y: 0
-        width: 27
-        height: 69
+        x: 6
+        y: 70
+        width: 20
+        height: 20
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -111,20 +111,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cb79d19687aab89419d23b2db22582ee
-      internalID: 1178636506
+      spriteID: 7f0fac597d8563a4b880e5f582f8b6ee
+      internalID: -760035885
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dead_1
+      name: 2D Pickups v6.2 spritesheet_1
       rect:
         serializedVersion: 2
-        x: 175
-        y: 0
-        width: 26
-        height: 68
+        x: 38
+        y: 70
+        width: 20
+        height: 20
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -132,20 +132,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5eab045114008274fadf096225508ef5
-      internalID: 1528870865
+      spriteID: 831e4c20f279eff42a64e8bfa6ca5428
+      internalID: -351638657
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dead_2
+      name: 2D Pickups v6.2 spritesheet_2
       rect:
         serializedVersion: 2
-        x: 302
-        y: 0
-        width: 47
-        height: 61
+        x: 71
+        y: 69
+        width: 18
+        height: 21
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -153,20 +153,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 52f4f75c578a1894287292f63f603305
-      internalID: -1012792003
+      spriteID: cd6dea5bde95ab7469e66ea837c5d4b1
+      internalID: -156236052
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dead_3
+      name: 2D Pickups v6.2 spritesheet_3
       rect:
         serializedVersion: 2
-        x: 431
-        y: 0
-        width: 59
-        height: 42
+        x: 6
+        y: 40
+        width: 20
+        height: 15
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -174,20 +174,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c4a0b20ad05c8fb468d728d4f710c15c
-      internalID: -1413446112
+      spriteID: 5d96bc9dba2b02d428bed4f5bea913c8
+      internalID: -914333797
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dead_4
+      name: 2D Pickups v6.2 spritesheet_4
       rect:
         serializedVersion: 2
-        x: 559
-        y: 0
-        width: 64
-        height: 13
+        x: 38
+        y: 37
+        width: 20
+        height: 21
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -195,8 +195,92 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 00850bb10b3634644997636d63e1e6e5
-      internalID: 605169442
+      spriteID: ac9372d436ca02247a97e193af84307f
+      internalID: -611286280
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 2D Pickups v6.2 spritesheet_5
+      rect:
+        serializedVersion: 2
+        x: 70
+        y: 37
+        width: 20
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 12e43be0ea6f20c4db88b238b70982ea
+      internalID: -1670472535
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 2D Pickups v6.2 spritesheet_6
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 8
+        width: 20
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c47bc47969e41e04a9e2536878084a89
+      internalID: 448485119
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 2D Pickups v6.2 spritesheet_7
+      rect:
+        serializedVersion: 2
+        x: 38
+        y: 5
+        width: 20
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e77a094ffff275f42a6f154e64d3926b
+      internalID: 100355965
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 2D Pickups v6.2 spritesheet_8
+      rect:
+        serializedVersion: 2
+        x: 70
+        y: 5
+        width: 20
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a7c71b13cc3ce4d46b85c9f91530846d
+      internalID: 430600257
       vertices: []
       indices: 
       edges: []
@@ -212,11 +296,15 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Dead_0: 1178636506
-      Dead_1: 1528870865
-      Dead_2: -1012792003
-      Dead_3: -1413446112
-      Dead_4: 605169442
+      2D Pickups v6.2 spritesheet_0: -760035885
+      2D Pickups v6.2 spritesheet_1: -351638657
+      2D Pickups v6.2 spritesheet_2: -156236052
+      2D Pickups v6.2 spritesheet_3: -914333797
+      2D Pickups v6.2 spritesheet_4: -611286280
+      2D Pickups v6.2 spritesheet_5: -1670472535
+      2D Pickups v6.2 spritesheet_6: 448485119
+      2D Pickups v6.2 spritesheet_7: 100355965
+      2D Pickups v6.2 spritesheet_8: 430600257
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

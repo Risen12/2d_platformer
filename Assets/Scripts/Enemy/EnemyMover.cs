@@ -8,8 +8,9 @@ public class EnemyMover : MonoBehaviour
     [SerializeField] private float _moveSpeed;
     [SerializeField] private VisibleZone _visibleZone;
     [SerializeField] private AttackPoint _attackPoint;
+    [SerializeField] private MapBorder _leftMapBorder;
+    [SerializeField] private MapBorder _rightMapBorder;
 
-    private Vector2 _currentDirection;
     private WaitForSeconds _stopDelay;
     private bool _isMoving;
 
@@ -17,7 +18,6 @@ public class EnemyMover : MonoBehaviour
 
     private void Awake()
     {
-        _currentDirection = Vector2.right;
         ChangeMoveState(true);
     }
 
@@ -31,13 +31,16 @@ public class EnemyMover : MonoBehaviour
     {
         if (collision.gameObject.TryGetComponent(out MapBorder mapBorder))
         {
-            ChangeDirection(_currentDirection * -1);
+            if (mapBorder.transform.position == _leftMapBorder.transform.position)
+                ChangeDirection(Vector2.right);
+            else
+                ChangeDirection(Vector2.left);
         }
     }
 
     private void Move()
     {
-        transform.Translate(_currentDirection * _moveSpeed * Time.deltaTime);
+        transform.Translate(Vector2.right * _moveSpeed * Time.deltaTime);
     }
 
     private IEnumerator WaitStopDelay()
@@ -70,8 +73,8 @@ public class EnemyMover : MonoBehaviour
 
     public void ChangeDirection(Vector2 direction)
     {
-        float rotationY = -180;
-        Quaternion leftRotation = Quaternion.Euler(0, rotationY, 0);
+        float leftRotationY = -180;
+        Quaternion leftRotation = Quaternion.Euler(0, leftRotationY, 0);
 
         if (direction.x > 0)
         {

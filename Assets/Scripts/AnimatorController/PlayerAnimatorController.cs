@@ -10,6 +10,7 @@ public class PlayerAnimatorController : MonoBehaviour
     private readonly int MoveParamHash = Animator.StringToHash("isMoving");
     private readonly int OnGroundParamHash = Animator.StringToHash("OnGround");
     private readonly int HurtParamHash = Animator.StringToHash("IsAttacked");
+    private readonly int DieParamHash = Animator.StringToHash("Died");
 
     private Mover _mover;
     private Attacker _attacker;
@@ -20,11 +21,11 @@ public class PlayerAnimatorController : MonoBehaviour
         _mover.Jumped -= OnJumped;
         _mover.Moved -= OnMoved;
         _mover.Ran -= OnRan;
-
-        _attacker.OnAttacked -= OnAttacked;
-        _attacker.DamageTaken -= OnDamageTaken;
-
         _mover.GroundStateChanged -= OnGroundStateChanged;
+
+        _attacker.Attacked -= OnAttacked;
+        _attacker.DamageTaken -= OnDamageTaken;
+        _attacker.Died -= OnDied;
     }
 
     private void Awake()
@@ -36,10 +37,11 @@ public class PlayerAnimatorController : MonoBehaviour
         _mover.Jumped += OnJumped;
         _mover.Moved += OnMoved;
         _mover.Ran += OnRan;
-
-        _attacker.OnAttacked += OnAttacked;
-        _attacker.DamageTaken += OnDamageTaken;
         _mover.GroundStateChanged += OnGroundStateChanged;
+
+        _attacker.Attacked += OnAttacked;
+        _attacker.DamageTaken += OnDamageTaken;
+        _attacker.Died += OnDied;
     }
 
     private void OnAttacked()
@@ -70,5 +72,10 @@ public class PlayerAnimatorController : MonoBehaviour
     private void OnGroundStateChanged(bool state)
     {
         _animator.SetBool(OnGroundParamHash, state);
+    }
+
+    private void OnDied()
+    {
+        _animator.SetTrigger(DieParamHash);
     }
 }

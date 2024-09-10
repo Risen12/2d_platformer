@@ -8,15 +8,17 @@ public class Enemy : MonoBehaviour, IDamagable
     [SerializeField] private float _startHealth = 100f;
     [SerializeField] private AttackPoint _attackPoint;
     [SerializeField] private float _attackRadius;
-    [SerializeField] private LayerMask _playerLayerMask;
-    [SerializeField] private float _delayBetweenAttacks;
     [SerializeField] private float _attackDamage;
+    [SerializeField] private LayerMask _playerLayerMask;
 
     private float _health;
+    private float _stopDelay;
+    private float _delayBetweenAttacks;
     private EnemyMover _enemyMover;
     private WaitForSeconds _dieDelay;
-    private WaitForSeconds _attackDelay;
+    private WaitForSeconds _attackPhaseDuration;
     private bool _canAttack;
+    private Coroutine _attackPhaseCoroutine;
 
     public event Action Attacking;
     public event Action DamageTaken;
@@ -27,59 +29,67 @@ public class Enemy : MonoBehaviour, IDamagable
         _health = _startHealth;
         _enemyMover = GetComponent<EnemyMover>();
 
-        _canAttack = true;
+        _stopDelay = 0.5f;
+        _delayBetweenAttacks = 1.5f;
 
-        float delay = 0.5f;
-        _dieDelay = new WaitForSeconds(delay);
-        _attackDelay = new WaitForSeconds(_delayBetweenAttacks);
-
-        _attackPoint.CanAttack += Attack;
+        _dieDelay = new WaitForSeconds(_stopDelay);
+        _attackPhaseDuration = new WaitForSeconds(_delayBetweenAttacks);
+        _canAttack = false;
+        _attackPoint.AttackStateChanged += OnAttackStateChanged;
     }
 
     private void OnDisable()
     {
-        _attackPoint.CanAttack -= Attack;
+        _attackPoint.AttackStateChanged -= OnAttackStateChanged;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.TryGetComponent(out Bullet bullet))
         {
-            _enemyMover.Stop(0.5f);
+            _enemyMover.Stop(_stopDelay);
             TakeDamage(bullet.DamagePerShot);
             DamageTaken?.Invoke();
         }
     }
 
-    private IEnumerator WaitBeforeAttack()
+    private void OnAttackStateChanged(bool state)
     {
-        _canAttack = false;
+        if (state)
+        {
+            _canAttack = true;
+            _attackPhaseCoroutine = StartCoroutine(StartAttackPhase());
+        }
+        else
+        {
+            _canAttack = false;
 
-        yield return _attackDelay;
-
-        _canAttack = true;
+            if (_attackPhaseCoroutine != null)
+                StopCoroutine(_attackPhaseCoroutine);
+        }
     }
 
-    private void Attack()
+    private IEnumerator StartAttackPhase()
     {
-        if (_canAttack)
+        while (_canAttack)
         {
             Attacking?.Invoke();
+            _enemyMover.Stop(_delayBetweenAttacks);
 
-            Collider2D playerCollider = Physics2D.OverlapCircle(_attackPoint.transform.position, _attackRadius, _playerLayerMask);
+            Collider2D collider = Physics2D.OverlapCircle(_attackPoint.transform.position, _attackRadius, _playerLayerMask);
 
-            if (playerCollider.gameObject.TryGetComponent(out Attacker attacker))
+            if (collider.TryGetComponent(out Attacker attacker))
             {
                 attacker.TakeDamage(_attackDamage);
             }
 
-            StartCoroutine(WaitBeforeAttack());
+            yield return _attackPhaseDuration;
         }
     }
 
     private void Die() 
     {
-        _enemyMover.Stop(0.5f);
+        _enemyMover.Stop(_stopDelay);
         Died?.Invoke();
 
         StartCoroutine(WaitDieDelay());

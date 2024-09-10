@@ -32,7 +32,6 @@ public class EnemyAnimatorController : MonoBehaviour
         _enemy.DamageTaken += OnDamageTaken;
     }
 
-
     private void OnDied()
     {
         _animator.SetTrigger(DieParamHash);

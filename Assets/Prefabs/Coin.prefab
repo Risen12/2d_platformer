@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7729944658020601022}
   - component: {fileID: 5943237125333397874}
   - component: {fileID: 2183038412771790933}
-  - component: {fileID: 4810672917533600268}
+  - component: {fileID: 9222722402101303703}
   m_Layer: 0
   m_Name: Coin
   m_TagString: Untagged
@@ -120,8 +120,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f89777cacbc4c74897bf2de146f185f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!58 &4810672917533600268
-CircleCollider2D:
+--- !u!61 &9222722402101303703
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -152,6 +152,16 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.004216552, y: 0.004216492}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1.28, y: 1.28}
+    newSize: {x: 1.28, y: 1.28}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
   serializedVersion: 2
-  m_Radius: 0.73
+  m_Size: {x: 1.0185792, y: 1.0185791}
+  m_EdgeRadius: 0

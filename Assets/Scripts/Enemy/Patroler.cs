@@ -43,6 +43,7 @@ public class Patroler : MonoBehaviour
         {
             HandleOnReachedPoint(Vector2.right);
         }
+
         if (point.localPosition == _rightPatrolPoint.localPosition)
         {
             HandleOnReachedPoint(Vector2.left);
