@@ -27,29 +27,12 @@ public class EnemyMover : MonoBehaviour
             Move();
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.TryGetComponent(out MapBorder mapBorder))
         {
-            if (mapBorder.transform.position == _leftMapBorder.transform.position)
-                ChangeDirection(Vector2.right);
-            else
-                ChangeDirection(Vector2.left);
+            ChangeDirection();
         }
-    }
-
-    private void Move()
-    {
-        transform.Translate(Vector2.right * _moveSpeed * Time.deltaTime);
-    }
-
-    private IEnumerator WaitStopDelay()
-    {
-        ChangeMoveState(false);
-
-        yield return _stopDelay;
-
-        ChangeMoveState(true);
     }
 
     public void ChangeMoveState(bool state)
@@ -71,18 +54,32 @@ public class EnemyMover : MonoBehaviour
         }
     }
 
-    public void ChangeDirection(Vector2 direction)
+    public void ChangeDirection()
     {
         float leftRotationY = -180;
         Quaternion leftRotation = Quaternion.Euler(0, leftRotationY, 0);
 
-        if (direction.x > 0)
-        {
-            transform.rotation = Quaternion.identity;
-        }
-        else
+        if (transform.rotation == Quaternion.identity)
         {
             transform.rotation = leftRotation;
         }
+        else
+        {
+            transform.rotation = Quaternion.identity;
+        }
+    }
+
+    private void Move()
+    {
+        transform.Translate(Vector2.right * _moveSpeed * Time.deltaTime);
+    }
+
+    private IEnumerator WaitStopDelay()
+    {
+        ChangeMoveState(false);
+
+        yield return _stopDelay;
+
+        ChangeMoveState(true);
     }
 }

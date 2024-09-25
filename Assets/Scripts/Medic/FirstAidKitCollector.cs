@@ -1,13 +1,13 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Attacker))]
+[RequireComponent(typeof(Health))]
 public class FirstAidKitCollector : MonoBehaviour
 {
-    private Attacker _attacker;
+    private Health _health;
 
     private void Awake()
     {
-        _attacker = GetComponent<Attacker>();
+        _health = GetComponent<Health>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -16,7 +16,7 @@ public class FirstAidKitCollector : MonoBehaviour
         {
             if (NeedUseFirstAidKit())
             {
-                _attacker.UseFirstAidKit(kit.HealthPoints);
+                _health.UseFirstAidKit(kit.HealthPoints);
                 Destroy(kit.gameObject);
             }
         }
@@ -24,7 +24,7 @@ public class FirstAidKitCollector : MonoBehaviour
 
     private bool NeedUseFirstAidKit()
     {
-        if (_attacker.CurrentHealth < _attacker.MaxHealth)
+        if (_health.CurrentHealth < _health.MaxHealth)
             return true;
         else
             return false;

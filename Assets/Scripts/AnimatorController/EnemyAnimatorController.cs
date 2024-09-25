@@ -12,14 +12,6 @@ public class EnemyAnimatorController : MonoBehaviour
     private EnemyMover _enemyMover;
     private Enemy _enemy;
 
-    private void OnDisable()
-    {
-        _enemy.Died -= OnDied;
-        _enemyMover.MoveStateChanged -= OnMoveStateChanged;
-        _enemy.Attacking -= OnAttacked;
-        _enemy.DamageTaken -= OnDamageTaken;
-    }
-
     private void Awake()
     {
         _animator = GetComponent<Animator>();
@@ -30,6 +22,14 @@ public class EnemyAnimatorController : MonoBehaviour
         _enemyMover.MoveStateChanged += OnMoveStateChanged;
         _enemy.Attacking += OnAttacked;
         _enemy.DamageTaken += OnDamageTaken;
+    }
+
+    private void OnDisable()
+    {
+        _enemy.Died -= OnDied;
+        _enemyMover.MoveStateChanged -= OnMoveStateChanged;
+        _enemy.Attacking -= OnAttacked;
+        _enemy.DamageTaken -= OnDamageTaken;
     }
 
     private void OnDied()

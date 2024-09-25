@@ -1,10 +1,10 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(EnemyMover))]
 public class Patroler : MonoBehaviour
 {
-    [SerializeField] private Transform _leftPatrolPoint;
-    [SerializeField] private Transform _rightPatrolPoint;
+    [SerializeField] private List<Transform> _patrolPoints;
     [SerializeField] private VisibleZone _visibleZone;
     [SerializeField] private float _patrolDelay;
 
@@ -39,20 +39,15 @@ public class Patroler : MonoBehaviour
 
     private void OnPointReached(Transform point)
     {
-        if (point.localPosition == _leftPatrolPoint.localPosition)
+        if (_patrolPoints.Contains(point))
         {
-            HandleOnReachedPoint(Vector2.right);
-        }
-
-        if (point.localPosition == _rightPatrolPoint.localPosition)
-        {
-            HandleOnReachedPoint(Vector2.left);
+            HandleOnReachedPoint();
         }
     }
 
-    private void HandleOnReachedPoint(Vector2 nextDirection)
+    private void HandleOnReachedPoint()
     {
-        _enemyMover.ChangeDirection(nextDirection);
+        _enemyMover.ChangeDirection();
         _enemyMover.Stop(_patrolDelay);
     }
 
@@ -62,7 +57,7 @@ public class Patroler : MonoBehaviour
         Vector2 direction = (playerPosition - currentPosition).normalized;
 
         _enemyMover.ChangeMoveState(true);
-        _enemyMover.ChangeDirection(direction);
+        _enemyMover.ChangeDirection();
         _isChasing = true;
     }
 

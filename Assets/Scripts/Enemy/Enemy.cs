@@ -53,6 +53,14 @@ public class Enemy : MonoBehaviour, IDamagable
         }
     }
 
+    public void TakeDamage(float damage)
+    {
+        _health -= damage;
+
+        if (_health <= 0)
+            Die();
+    }
+
     private void OnAttackStateChanged(bool state)
     {
         if (state)
@@ -78,9 +86,9 @@ public class Enemy : MonoBehaviour, IDamagable
 
             Collider2D collider = Physics2D.OverlapCircle(_attackPoint.transform.position, _attackRadius, _playerLayerMask);
 
-            if (collider.TryGetComponent(out Attacker attacker))
+            if (collider.TryGetComponent(out Health health))
             {
-                attacker.TakeDamage(_attackDamage);
+                health.TakeDamage(_attackDamage);
             }
 
             yield return _attackPhaseDuration;
@@ -100,13 +108,5 @@ public class Enemy : MonoBehaviour, IDamagable
         yield return _dieDelay;
 
         gameObject.SetActive(false);
-    }
-
-    public void TakeDamage(float damage)
-    {
-        _health -= damage;
-
-        if (_health <= 0)
-            Die();
     }
 }

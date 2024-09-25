@@ -15,11 +15,6 @@ public class FirstAidKitSpawner : MonoBehaviour
         GenerateFirstAidKits();
     }
 
-    private void GenerateFirstAidKit()
-    { 
-        
-    }
-
     private void GenerateFirstAidKits()
     {
         for (int i = 0; i < _firstAidKitsCount; i++)
@@ -29,13 +24,7 @@ public class FirstAidKitSpawner : MonoBehaviour
         }
     }
 
-    private bool ValidatePosition(Vector2 position)
-    { 
-        if(_blockedPositions.Contains(position))
-            return false;
-        else
-            return true;
-    }
+    private bool ValidatePosition(Vector2 position) => !_blockedPositions.Contains(position);
 
     private Vector2 GetPosition()
     {

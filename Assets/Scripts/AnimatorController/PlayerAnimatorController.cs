@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Mover), typeof(Attacker), typeof(Animator))]
-[RequireComponent(typeof(BoxCollider2D))]
+[RequireComponent(typeof(BoxCollider2D), typeof(GroundDetector), typeof(Health))]
 public class PlayerAnimatorController : MonoBehaviour
 {
     private readonly int AttackParamHash = Animator.StringToHash("Attack");
@@ -13,35 +13,39 @@ public class PlayerAnimatorController : MonoBehaviour
     private readonly int DieParamHash = Animator.StringToHash("Died");
 
     private Mover _mover;
+    private GroundDetector _groundDetector;
     private Attacker _attacker;
     private Animator _animator;
+    private Health _health;
+
+    private void Awake()
+    {
+        _mover = GetComponent<Mover>();
+        _health = GetComponent<Health>();
+        _attacker = GetComponent<Attacker>();
+        _animator = GetComponent<Animator>();
+        _groundDetector = GetComponent<GroundDetector>();
+
+        _mover.Jumped += OnJumped;
+        _mover.Moved += OnMoved;
+        _mover.Ran += OnRan;
+        _groundDetector.GroundStateChanged += OnGroundStateChanged;
+
+        _attacker.Attacked += OnAttacked;
+        _health.DamageTaken += OnDamageTaken;
+        _health.Died += OnDied;
+    }
 
     private void OnDisable()
     {
         _mover.Jumped -= OnJumped;
         _mover.Moved -= OnMoved;
         _mover.Ran -= OnRan;
-        _mover.GroundStateChanged -= OnGroundStateChanged;
+        _groundDetector.GroundStateChanged -= OnGroundStateChanged;
 
         _attacker.Attacked -= OnAttacked;
-        _attacker.DamageTaken -= OnDamageTaken;
-        _attacker.Died -= OnDied;
-    }
-
-    private void Awake()
-    {
-        _mover = GetComponent<Mover>();
-        _attacker = GetComponent<Attacker>();
-        _animator = GetComponent<Animator>();
-
-        _mover.Jumped += OnJumped;
-        _mover.Moved += OnMoved;
-        _mover.Ran += OnRan;
-        _mover.GroundStateChanged += OnGroundStateChanged;
-
-        _attacker.Attacked += OnAttacked;
-        _attacker.DamageTaken += OnDamageTaken;
-        _attacker.Died += OnDied;
+        _health.DamageTaken -= OnDamageTaken;
+        _health.Died -= OnDied;
     }
 
     private void OnAttacked()

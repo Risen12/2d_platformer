@@ -14,16 +14,22 @@ public class BulletSpawner : MonoBehaviour
     private void Awake()
     {
         _bulletPool = new ObjectPool<Bullet>(
-    createFunc: CreateBullet,
-    actionOnGet: GetBullet,
-    actionOnRelease: ReleaseBullet,
-    actionOnDestroy: (bullet) => Destroy(bullet),
-    collectionCheck: false,
-    defaultCapacity: _bulletCount,
-    maxSize: _bulletCount
-    );
+            createFunc: CreateBullet,
+            actionOnGet: GetBullet,
+            actionOnRelease: ReleaseBullet,
+            actionOnDestroy: (bullet) => Destroy(bullet),
+            collectionCheck: false,
+            defaultCapacity: _bulletCount,
+            maxSize: _bulletCount
+        );
 
         _audioSource = GetComponent<AudioSource>();
+    }
+
+    public void PrepareBullet()
+    {
+        _bulletPool.Get();
+        _audioSource.Play();
     }
 
     private void GetBullet(Bullet bullet)
@@ -74,11 +80,5 @@ public class BulletSpawner : MonoBehaviour
             startPosition = new Vector3(_playerPosition.x + offsetX, _playerPosition.y + offsetY, 0f);
 
         return startPosition;
-    }
-
-    public void GetBullet()
-    {
-        _bulletPool.Get();
-        _audioSource.Play();
     }
 }
