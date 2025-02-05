@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class InputReader : MonoBehaviour
@@ -8,7 +9,10 @@ public class InputReader : MonoBehaviour
     private float _horizontalDirection;
     private float _verticalDirection;
     private KeyCode _runButton;
+    private KeyCode _teleportButton;
     private bool _isRunning;
+
+    public event Action TeleportButtonPressed;
 
     public float VerticalDirection => _verticalDirection;
     public float HorizontalDirection => _horizontalDirection;
@@ -16,6 +20,7 @@ public class InputReader : MonoBehaviour
 
     private void Awake()
     {
+        _teleportButton = KeyCode.T;
         _runButton = KeyCode.LeftShift;
     }
 
@@ -32,5 +37,8 @@ public class InputReader : MonoBehaviour
         { 
             _isRunning = false;
         }
+
+        if (Input.GetKeyDown(_teleportButton))
+            TeleportButtonPressed?.Invoke();
     }
 }

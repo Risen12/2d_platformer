@@ -6,7 +6,8 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private InputReader _inputReader;
     [SerializeField] private float _delayAfterAttack;
-    [SerializeField] MySceneManager _sceneManager;
+    [SerializeField] private MySceneManager _sceneManager;
+    [SerializeField] private TeleporController _teleporController;
 
     private Health _health;
     private bool _isBlockAfterAttack;
@@ -22,15 +23,20 @@ public class Player : MonoBehaviour
 
         _isBlockAfterAttack = false;
         _afterAttackDelay = new WaitForSeconds(_delayAfterAttack);
+    }
 
+    private void OnEnable()
+    {
         _health.DamageTaken += OnDamageTaken;
         _health.AfterDied += OnDied;
+        _teleporController.Teleported += OnTeleported;
     }
 
     private void OnDisable()
     {
         _health.DamageTaken -= OnDamageTaken;
         _health.AfterDied -= OnDied;
+        _teleporController.Teleported -= OnTeleported;
     }
 
     private void FixedUpdate()
@@ -53,18 +59,23 @@ public class Player : MonoBehaviour
                 _mover.Stop();
             }
 
-            if (_inputReader.VerticalDirection != 0 && _groundDetector.IsGrounded)
+            if (_inputReader.VerticalDirection > 0 && _groundDetector.IsGrounded)
             {
                 _mover.Jump();
             }
         }
     }
 
-    private void OnDamageTaken()
+    private void OnDamageTaken(float _)
     {
         _mover.Stop();
 
         StartCoroutine(StandAfterAttack());
+    }
+
+    private void OnTeleported(Vector2 position)
+    { 
+        transform.position = position;
     }
 
     private void OnDied()

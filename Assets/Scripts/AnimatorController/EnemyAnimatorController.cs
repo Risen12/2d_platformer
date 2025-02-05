@@ -1,6 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(EnemyMover), typeof(Enemy), typeof(Animator))]
+[RequireComponent(typeof(Health))]
 public class EnemyAnimatorController : MonoBehaviour
 {
     private readonly int MoveParamHash = Animator.StringToHash("isMoving");
@@ -11,25 +12,30 @@ public class EnemyAnimatorController : MonoBehaviour
     private Animator _animator;
     private EnemyMover _enemyMover;
     private Enemy _enemy;
+    private Health _health;
 
     private void Awake()
     {
         _animator = GetComponent<Animator>();
         _enemy = GetComponent<Enemy>();
         _enemyMover = GetComponent<EnemyMover>();
+        _health = GetComponent<Health>();
+    }
 
-        _enemy.Died += OnDied;
+    private void OnEnable()
+    {
+        _health.Died += OnDied;
         _enemyMover.MoveStateChanged += OnMoveStateChanged;
         _enemy.Attacking += OnAttacked;
-        _enemy.DamageTaken += OnDamageTaken;
+        _health.DamageTaken += OnDamageTaken;
     }
 
     private void OnDisable()
     {
-        _enemy.Died -= OnDied;
+        _health.Died -= OnDied;
         _enemyMover.MoveStateChanged -= OnMoveStateChanged;
         _enemy.Attacking -= OnAttacked;
-        _enemy.DamageTaken -= OnDamageTaken;
+        _health.DamageTaken -= OnDamageTaken;
     }
 
     private void OnDied()
@@ -42,7 +48,7 @@ public class EnemyAnimatorController : MonoBehaviour
         _animator.SetBool(MoveParamHash, state);
     }
 
-    private void OnDamageTaken()
+    private void OnDamageTaken(float _)
     {
         _animator.SetTrigger(HurtParamHash);
     }

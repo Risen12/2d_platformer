@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(EnemyMover))]
@@ -35,20 +36,29 @@ public class Patroler : MonoBehaviour
                 OnPointReached(patrolPoint.transform);
             }
         }
+
+        if (collision.gameObject.TryGetComponent(out MapBorder mapBorder))
+        {
+            _enemyMover.ChangeDirection();
+        }
     }
 
     private void OnPointReached(Transform point)
     {
         if (_patrolPoints.Contains(point))
         {
-            HandleOnReachedPoint();
+            Transform nextPoint = _patrolPoints.Where(otherPoint => otherPoint != point).First();
+            CalculatePathToNextPoint(point, nextPoint);
         }
     }
 
-    private void HandleOnReachedPoint()
+    private void CalculatePathToNextPoint(Transform currentPoint, Transform nextPoint)
     {
-        _enemyMover.ChangeDirection();
         _enemyMover.Stop(_patrolDelay);
+
+        Vector2 direction = (nextPoint.transform.position - currentPoint.transform.position).normalized;
+
+        VerifyChangeDirection(direction);
     }
 
     private void onEnemyEntered(Vector2 playerPosition)
@@ -57,12 +67,23 @@ public class Patroler : MonoBehaviour
         Vector2 direction = (playerPosition - currentPosition).normalized;
 
         _enemyMover.ChangeMoveState(true);
-        _enemyMover.ChangeDirection();
+
+        VerifyChangeDirection(direction);
+
         _isChasing = true;
     }
 
     private void OnEnemyExited() 
     {
         _isChasing = false;
+    }
+
+    private void VerifyChangeDirection(Vector2 direction)
+    {
+        if (direction.x < 0 && transform.rotation == Quaternion.identity
+    || direction.x > 0 && transform.rotation != Quaternion.identity)
+        {
+            _enemyMover.ChangeDirection();
+        }
     }
 }

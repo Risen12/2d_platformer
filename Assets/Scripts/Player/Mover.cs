@@ -15,6 +15,7 @@ public class Mover : MonoBehaviour
     public event Action<bool> Moved;
     public event Action<bool> Ran;
     public event Action Jumped;
+    public event Action DirectionChanged;
 
     public bool IsMoving => _isMoving;
 
@@ -44,7 +45,7 @@ public class Mover : MonoBehaviour
 
     public void Jump()
     {
-        _rigidbody.velocity = new Vector2(_rigidbody.velocity.x, _jumpSpeed);
+        _rigidbody.linearVelocity = new Vector2(_rigidbody.linearVelocity.x, _jumpSpeed);
         Jumped?.Invoke();
     }
 
@@ -78,6 +79,7 @@ public class Mover : MonoBehaviour
     private void ChangeDirection(float direction)
     {
         Quaternion leftRotation = Quaternion.Euler(0, _leftRotationY, 0);
+        DirectionChanged?.Invoke();
 
         if (direction > 0)
         {

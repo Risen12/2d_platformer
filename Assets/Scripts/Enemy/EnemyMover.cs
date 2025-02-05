@@ -6,15 +6,12 @@ using UnityEngine;
 public class EnemyMover : MonoBehaviour
 {
     [SerializeField] private float _moveSpeed;
-    [SerializeField] private VisibleZone _visibleZone;
-    [SerializeField] private AttackPoint _attackPoint;
-    [SerializeField] private MapBorder _leftMapBorder;
-    [SerializeField] private MapBorder _rightMapBorder;
 
     private WaitForSeconds _stopDelay;
     private bool _isMoving;
 
     public event Action<bool> MoveStateChanged;
+    public event Action DirectionChanged;
 
     private void Awake()
     {
@@ -25,14 +22,6 @@ public class EnemyMover : MonoBehaviour
     {
         if (_isMoving)
             Move();
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.TryGetComponent(out MapBorder mapBorder))
-        {
-            ChangeDirection();
-        }
     }
 
     public void ChangeMoveState(bool state)
@@ -67,6 +56,8 @@ public class EnemyMover : MonoBehaviour
         {
             transform.rotation = Quaternion.identity;
         }
+
+        DirectionChanged?.Invoke();
     }
 
     private void Move()

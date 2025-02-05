@@ -5,20 +5,25 @@ using UnityEngine;
 public class Health : MonoBehaviour, IDamagable
 {
     [SerializeField] private float _maxHealth = 100f;
+    [SerializeField] private float _minHealth = 0f;
 
     private float _health;
     private WaitForSeconds _delayBeforeDie;
 
     public event Action AfterDied;
     public event Action Died;
-    public event Action DamageTaken;
+    public event Action<float> DamageTaken;
+    public event Action<float> Restored;
+    public event Action Started;
 
     public float MaxHealth => _maxHealth;
+    public float MinHealth => _minHealth;
     public float CurrentHealth => _health;
 
     private void Awake()
     {
         _health = _maxHealth;
+        Started?.Invoke();
 
         float _dieDelay = 0.6f;
         _delayBeforeDie = new WaitForSeconds(_dieDelay);
@@ -31,7 +36,7 @@ public class Health : MonoBehaviour, IDamagable
         if (_health <= 0)
             StartCoroutine(HandleDie());
 
-        DamageTaken?.Invoke();
+        DamageTaken?.Invoke(_health);
     }
 
     public void UseFirstAidKit(float healthPoints)
@@ -40,6 +45,8 @@ public class Health : MonoBehaviour, IDamagable
             _health = _maxHealth;
         else
             _health += healthPoints;
+
+        Restored?.Invoke(_health);
     }
 
     private IEnumerator HandleDie()

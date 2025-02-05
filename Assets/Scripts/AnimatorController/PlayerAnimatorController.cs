@@ -68,7 +68,7 @@ public class PlayerAnimatorController : MonoBehaviour
         _animator.SetTrigger(JumpParamHash);
     }
 
-    private void OnDamageTaken()
+    private void OnDamageTaken(float _)
     {
         _animator.SetTrigger(HurtParamHash);
     }

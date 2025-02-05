@@ -2,45 +2,46 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(EnemyMover))]
-public class Enemy : MonoBehaviour, IDamagable
+[RequireComponent(typeof(EnemyMover), typeof(Health))]
+public class Enemy : MonoBehaviour
 {
-    [SerializeField] private float _startHealth = 100f;
     [SerializeField] private AttackPoint _attackPoint;
     [SerializeField] private float _attackRadius;
     [SerializeField] private float _attackDamage;
     [SerializeField] private LayerMask _playerLayerMask;
 
-    private float _health;
+    private Health _health;
+    private EnemyMover _enemyMover;
     private float _stopDelay;
     private float _delayBetweenAttacks;
-    private EnemyMover _enemyMover;
-    private WaitForSeconds _dieDelay;
     private WaitForSeconds _attackPhaseDuration;
     private bool _canAttack;
     private Coroutine _attackPhaseCoroutine;
 
     public event Action Attacking;
-    public event Action DamageTaken;
-    public event Action Died;
 
     private void Awake()
     {
-        _health = _startHealth;
+        _health = GetComponent<Health>();
         _enemyMover = GetComponent<EnemyMover>();
 
         _stopDelay = 0.5f;
         _delayBetweenAttacks = 1.5f;
 
-        _dieDelay = new WaitForSeconds(_stopDelay);
         _attackPhaseDuration = new WaitForSeconds(_delayBetweenAttacks);
         _canAttack = false;
+    }
+
+    private void OnEnable()
+    {
         _attackPoint.AttackStateChanged += OnAttackStateChanged;
+        _health.AfterDied += OnAfterDied;
     }
 
     private void OnDisable()
     {
         _attackPoint.AttackStateChanged -= OnAttackStateChanged;
+        _health.AfterDied -= OnAfterDied;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -48,17 +49,8 @@ public class Enemy : MonoBehaviour, IDamagable
         if (collision.TryGetComponent(out Bullet bullet))
         {
             _enemyMover.Stop(_stopDelay);
-            TakeDamage(bullet.DamagePerShot);
-            DamageTaken?.Invoke();
+            _health.TakeDamage(bullet.DamagePerShot);
         }
-    }
-
-    public void TakeDamage(float damage)
-    {
-        _health -= damage;
-
-        if (_health <= 0)
-            Die();
     }
 
     private void OnAttackStateChanged(bool state)
@@ -95,18 +87,9 @@ public class Enemy : MonoBehaviour, IDamagable
         }
     }
 
-    private void Die() 
+    private void OnAfterDied()
     {
         _enemyMover.Stop(_stopDelay);
-        Died?.Invoke();
-
-        StartCoroutine(WaitDieDelay());
-    }
-
-    private IEnumerator WaitDieDelay()
-    { 
-        yield return _dieDelay;
-
         gameObject.SetActive(false);
     }
 }
