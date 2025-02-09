@@ -10,6 +10,7 @@ public class TeleporController : MonoBehaviour
     [SerializeField] private FadeController _fadeController;
 
     private bool _isPlayerInTeleportZone;
+    private Coroutine _teleportCoroutine;
 
     public event Action<Vector2> Teleported;
 
@@ -35,11 +36,17 @@ public class TeleporController : MonoBehaviour
         if (_isPlayerInTeleportZone == false)
             return;
 
+        if(_teleportCoroutine != null)
+            StopCoroutine(_teleportCoroutine);
+
         StartCoroutine(_fadeController.FadeInAndOut());
     }
 
     private void OnFadedIn()
     {
+        if (_isPlayerInTeleportZone == false)
+            return;
+
         float upperPositionY = -3f;
         float lowerPositionY = -13f;
         Vector2 upperPosition = new Vector2(transform.position.x, upperPositionY);

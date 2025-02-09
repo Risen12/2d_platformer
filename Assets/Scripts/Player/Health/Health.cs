@@ -25,8 +25,8 @@ public class Health : MonoBehaviour, IDamagable
         _health = _maxHealth;
         Started?.Invoke();
 
-        float _dieDelay = 0.6f;
-        _delayBeforeDie = new WaitForSeconds(_dieDelay);
+        float dieDelay = 0.6f;
+        _delayBeforeDie = new WaitForSeconds(dieDelay);
     }
 
     public void TakeDamage(float damage)

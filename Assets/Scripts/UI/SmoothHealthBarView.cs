@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class SmoothHealthBarView : HealthBarView
 {
-    [SerializeField] private float _smoothIndex;
+    [SerializeField] protected float SmoothIndex;
     private Coroutine _changeValueCoroutine;
 
     protected override void ShowHealth(float value)
@@ -19,7 +19,7 @@ public class SmoothHealthBarView : HealthBarView
     {
         while (Slider.value != targetValue)
         {
-            Slider.value = Mathf.MoveTowards(Slider.value, targetValue, _smoothIndex);
+            Slider.value = Mathf.MoveTowards(Slider.value, targetValue, SmoothIndex * Time.deltaTime);
 
             yield return null;
         }

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(Mover), typeof(GroundDetector), typeof(Health))]
 public class Player : MonoBehaviour
@@ -7,7 +8,7 @@ public class Player : MonoBehaviour
     [SerializeField] private InputReader _inputReader;
     [SerializeField] private float _delayAfterAttack;
     [SerializeField] private MySceneManager _sceneManager;
-    [SerializeField] private TeleporController _teleporController;
+    [SerializeField] private List<TeleporController> _teleporControllers;
 
     private Health _health;
     private bool _isBlockAfterAttack;
@@ -29,14 +30,18 @@ public class Player : MonoBehaviour
     {
         _health.DamageTaken += OnDamageTaken;
         _health.AfterDied += OnDied;
-        _teleporController.Teleported += OnTeleported;
+
+        foreach (TeleporController teleporController in _teleporControllers)
+            teleporController.Teleported += OnTeleported;
     }
 
     private void OnDisable()
     {
         _health.DamageTaken -= OnDamageTaken;
         _health.AfterDied -= OnDied;
-        _teleporController.Teleported -= OnTeleported;
+
+        foreach (TeleporController teleporController in _teleporControllers)
+            teleporController.Teleported -= OnTeleported;
     }
 
     private void FixedUpdate()

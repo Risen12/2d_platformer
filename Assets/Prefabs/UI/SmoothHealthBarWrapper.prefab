@@ -290,7 +290,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Health: {fileID: 0}
-  _smoothIndex: 0.12
+  SmoothIndex: 30
 --- !u!1 &3465782442280730934
 GameObject:
   m_ObjectHideFlags: 0

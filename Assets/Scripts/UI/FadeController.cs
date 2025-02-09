@@ -55,6 +55,6 @@ public class FadeController : MonoBehaviour
     {
         yield return _delay;
 
-        StartCoroutine(ChangeFade(targetColor));
+        yield return ChangeFade(targetColor);
     }
 }

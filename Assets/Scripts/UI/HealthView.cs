@@ -8,6 +8,7 @@ public abstract class HealthView : MonoBehaviour
     {
         Health.Restored += OnHealthChanged;
         Health.DamageTaken += OnHealthChanged;
+        Health.Restored += OnHealthChanged;
         Health.Started += OnStarted;
     }
 
@@ -15,6 +16,7 @@ public abstract class HealthView : MonoBehaviour
     {
         Health.Restored -= OnHealthChanged;
         Health.DamageTaken -= OnHealthChanged;
+        Health.Restored -= OnHealthChanged;
         Health.Started -= OnStarted;
     }
 
