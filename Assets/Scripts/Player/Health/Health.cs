@@ -39,7 +39,7 @@ public class Health : MonoBehaviour, IDamagable
         DamageTaken?.Invoke(_health);
     }
 
-    public void UseFirstAidKit(float healthPoints)
+    public void Restore(float healthPoints)
     {
         if (_health + healthPoints > _maxHealth)
             _health = _maxHealth;

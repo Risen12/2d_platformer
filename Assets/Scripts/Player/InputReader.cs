@@ -10,9 +10,11 @@ public class InputReader : MonoBehaviour
     private float _verticalDirection;
     private KeyCode _runButton;
     private KeyCode _teleportButton;
+    private KeyCode _vampirismButton;
     private bool _isRunning;
 
     public event Action TeleportButtonPressed;
+    public event Action VamprisimButtonPressed;
 
     public float VerticalDirection => _verticalDirection;
     public float HorizontalDirection => _horizontalDirection;
@@ -22,6 +24,7 @@ public class InputReader : MonoBehaviour
     {
         _teleportButton = KeyCode.T;
         _runButton = KeyCode.LeftShift;
+        _vampirismButton = KeyCode.V;
     }
 
     private void Update()
@@ -40,5 +43,8 @@ public class InputReader : MonoBehaviour
 
         if (Input.GetKeyDown(_teleportButton))
             TeleportButtonPressed?.Invoke();
+
+        if(Input.GetKeyDown(_vampirismButton))
+            VamprisimButtonPressed?.Invoke();
     }
 }

@@ -16,7 +16,7 @@ public class FirstAidKitCollector : MonoBehaviour
         {
             if (NeedUseFirstAidKit())
             {
-                _health.UseFirstAidKit(kit.HealthPoints);
+                _health.Restore(kit.HealthPoints);
                 Destroy(kit.gameObject);
             }
         }

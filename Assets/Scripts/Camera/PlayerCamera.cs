@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerCamera : MonoBehaviour
@@ -7,12 +8,43 @@ public class PlayerCamera : MonoBehaviour
     [SerializeField] private float _rightBorder;
     [SerializeField] private float _topBorder;
     [SerializeField] private float _bottomBorder;
+    [SerializeField] private List<TeleporController> _teleportControllers;
 
     private float _positionZ;
+    private float _sewerBottomBorder;
+    private float _upperBottomBorder;
 
     private void Awake()
     {
+        _sewerBottomBorder = -12f;
+        _upperBottomBorder = -1.2f;
         _positionZ = -10f;
+    }
+
+    private void OnEnable()
+    {
+        foreach (TeleporController teleporController in _teleportControllers)
+        {
+            teleporController.Teleported += OnTeleported;
+        }
+    }
+
+    private void OnDisable()
+    {
+        foreach (TeleporController teleporController in _teleportControllers)
+        {
+            teleporController.Teleported -= OnTeleported;
+        }
+    }
+
+    private void OnTeleported(Vector2 newPosition)
+    {
+        float upperPositon = -3;
+
+        if (newPosition.y == upperPositon)
+            _bottomBorder = _upperBottomBorder;
+        else
+            _bottomBorder = _sewerBottomBorder;
     }
 
     private void LateUpdate()
