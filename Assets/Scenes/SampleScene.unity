@@ -1560,7 +1560,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _delayDuration: 2
+  _indicator: {fileID: 1928727484}
   _takingHealthPerTime: 10
+  _activeTime: 6
 --- !u!114 &544928712
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1637,7 +1639,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 544928706}
-  - {fileID: 755449223}
   m_Father: {fileID: 1468248748}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -1657,10 +1658,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa55b75efb3077343b0175275733b902, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _reloadIndicator: {fileID: 1928727484}
   _vampirism: {fileID: 544928711}
-  _animatorController: {fileID: 544928712}
-  _reloadIndicator: {fileID: 1928727483}
-  _activeTime: 6
   _reloadTime: 4
 --- !u!1 &619394800
 GameObject:
@@ -1938,18 +1937,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 755449222}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1928727482}
-  m_Father: {fileID: 616657905}
+  m_Father: {fileID: 1468248748}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 1.516}
-  m_SizeDelta: {x: 1.5575, y: 0.19}
+  m_AnchoredPosition: {x: -0.0015, y: 0.473}
+  m_SizeDelta: {x: 0.7, y: 0.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &755449224
 MonoBehaviour:
@@ -2365,7 +2364,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.1356268, g: 0, b: 1, a: 1}
+  m_Color: {r: 0.16794233, g: 0.9622642, b: 0.78299755, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3684,6 +3683,7 @@ Transform:
   - {fileID: 199873057}
   - {fileID: 3382130942850376234}
   - {fileID: 616657905}
+  - {fileID: 755449223}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &1468248749
@@ -4445,8 +4445,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1928727482}
   - component: {fileID: 1928727483}
+  - component: {fileID: 1928727484}
   m_Layer: 5
-  m_Name: Slider
+  m_Name: VampirismIndicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4520,10 +4521,24 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 6
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 6
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1928727484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1928727481}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da008efc07691144ab83b281009c57ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _vampirismReloader: {fileID: 616657906}
+  _vampirism: {fileID: 544928711}
 --- !u!1 &1955079844
 GameObject:
   m_ObjectHideFlags: 0
@@ -5454,6 +5469,18 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 889718404615747082, guid: 00eaa88ddf98e8f4bbc7995ca4c1853e, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 889718404615747082, guid: 00eaa88ddf98e8f4bbc7995ca4c1853e, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 889718404615747082, guid: 00eaa88ddf98e8f4bbc7995ca4c1853e, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3172924762476671524, guid: 00eaa88ddf98e8f4bbc7995ca4c1853e, type: 3}
       propertyPath: m_Name
       value: HealthBarTwoColors
@@ -5496,11 +5523,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7588291852557580314, guid: 00eaa88ddf98e8f4bbc7995ca4c1853e, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 2
+      value: 1.0838
       objectReference: {fileID: 0}
     - target: {fileID: 7588291852557580314, guid: 00eaa88ddf98e8f4bbc7995ca4c1853e, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0.5
+      value: 0.1935
       objectReference: {fileID: 0}
     - target: {fileID: 7588291852557580314, guid: 00eaa88ddf98e8f4bbc7995ca4c1853e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5536,7 +5563,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7588291852557580314, guid: 00eaa88ddf98e8f4bbc7995ca4c1853e, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.463
+      value: 0.4017
       objectReference: {fileID: 0}
     - target: {fileID: 7588291852557580314, guid: 00eaa88ddf98e8f4bbc7995ca4c1853e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

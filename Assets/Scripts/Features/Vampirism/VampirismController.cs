@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Health))]
@@ -18,25 +19,32 @@ public class VampirismController : MonoBehaviour
     {
         _inputReader.VamprisimButtonPressed += OnVampirisimButtonPressed;
         _vampirism.HealthTaken += OnHealthTaken;
-
+        _vampirism.VisibleTimeEnded += OnVisibleTimeEnded;
     }
 
     private void OnDisable()
     {
         _inputReader.VamprisimButtonPressed -= OnVampirisimButtonPressed;
         _vampirism.HealthTaken -= OnHealthTaken;
+        _vampirism.VisibleTimeEnded -= OnVisibleTimeEnded;
     }
 
     private void OnVampirisimButtonPressed()
     {
         if (_reloader.IsReady && _vampirism.gameObject.activeSelf == false)
         {
-            _reloader.Activate();
+            _vampirism.gameObject.SetActive(true);
+            _vampirism.Activate();
         }
     }
 
     private void OnHealthTaken(float value)
     {
         _health.Restore(value);
+    }
+
+    private void OnVisibleTimeEnded()
+    {
+        _vampirism.gameObject.SetActive(false);
     }
 }

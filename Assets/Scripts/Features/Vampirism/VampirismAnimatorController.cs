@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(Animator), typeof(Vampirism))]
 public class VampirismAnimatorController : MonoBehaviour
 {
     private readonly int ActiveTimeEndedTrigger = Animator.StringToHash("ActiveTimeEnded");
@@ -9,18 +9,20 @@ public class VampirismAnimatorController : MonoBehaviour
     [SerializeField] private VampirismReloader _vampirismReloader;
 
     private Animator _animator;
+    private Vampirism _vampirism;
 
     public event Action EntryAnimationEnded;
     public event Action EndAnimationEnded;
 
     private void Awake()
     {
+        _vampirism = GetComponent<Vampirism>();
         _animator = GetComponent<Animator>();
     }
 
-    private void OnEnable() => _vampirismReloader.ActiveTimeEnded += OnActiveTimeEnded;
+    private void OnEnable() => _vampirism.ActiveTimeEnded += OnActiveTimeEnded;
 
-    private void OnDisable() => _vampirismReloader.ActiveTimeEnded -= OnActiveTimeEnded;
+    private void OnDisable() => _vampirism.ActiveTimeEnded -= OnActiveTimeEnded;
 
     private void OnActiveTimeEnded() => _animator.SetTrigger(ActiveTimeEndedTrigger);
 
