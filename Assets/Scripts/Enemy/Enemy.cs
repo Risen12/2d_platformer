@@ -9,10 +9,10 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float _attackRadius;
     [SerializeField] private float _attackDamage;
     [SerializeField] private LayerMask _playerLayerMask;
+    [SerializeField] private float _afterAttackDelay;
 
     private Health _health;
     private EnemyMover _enemyMover;
-    private float _stopDelay;
     private float _delayBetweenAttacks;
     private WaitForSeconds _attackPhaseDuration;
     private bool _canAttack;
@@ -25,7 +25,6 @@ public class Enemy : MonoBehaviour
         _health = GetComponent<Health>();
         _enemyMover = GetComponent<EnemyMover>();
 
-        _stopDelay = 0.5f;
         _delayBetweenAttacks = 1.5f;
 
         _attackPhaseDuration = new WaitForSeconds(_delayBetweenAttacks);
@@ -36,19 +35,21 @@ public class Enemy : MonoBehaviour
     {
         _attackPoint.AttackStateChanged += OnAttackStateChanged;
         _health.AfterDied += OnAfterDied;
+        _health.DamageTaken += OnAttacked;
     }
 
     private void OnDisable()
     {
         _attackPoint.AttackStateChanged -= OnAttackStateChanged;
         _health.AfterDied -= OnAfterDied;
+        _health.DamageTaken -= OnAttacked;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.TryGetComponent(out Bullet bullet))
         {
-            _enemyMover.Stop(_stopDelay);
+            _enemyMover.Stop(_afterAttackDelay);
             _health.TakeDamage(bullet.DamagePerShot);
         }
     }
@@ -67,6 +68,11 @@ public class Enemy : MonoBehaviour
             if (_attackPhaseCoroutine != null)
                 StopCoroutine(_attackPhaseCoroutine);
         }
+    }
+
+    private void OnAttacked(float _)
+    {
+        _enemyMover.Stop(_afterAttackDelay);
     }
 
     private IEnumerator StartAttackPhase()
@@ -89,7 +95,7 @@ public class Enemy : MonoBehaviour
 
     private void OnAfterDied()
     {
-        _enemyMover.Stop(_stopDelay);
+        _enemyMover.Stop(_afterAttackDelay);
         gameObject.SetActive(false);
     }
 }

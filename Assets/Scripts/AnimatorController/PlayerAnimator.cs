@@ -4,14 +4,6 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider2D), typeof(GroundDetector), typeof(Health))]
 public class PlayerAnimatorController : MonoBehaviour
 {
-    private readonly int AttackParamHash = Animator.StringToHash("Attack");
-    private readonly int JumpParamHash = Animator.StringToHash("Jump");
-    private readonly int RunParamHash = Animator.StringToHash("isRunning");
-    private readonly int MoveParamHash = Animator.StringToHash("isMoving");
-    private readonly int OnGroundParamHash = Animator.StringToHash("OnGround");
-    private readonly int HurtParamHash = Animator.StringToHash("IsAttacked");
-    private readonly int DieParamHash = Animator.StringToHash("Died");
-
     private Mover _mover;
     private GroundDetector _groundDetector;
     private Attacker _attacker;
@@ -50,36 +42,36 @@ public class PlayerAnimatorController : MonoBehaviour
 
     private void OnAttacked()
     {
-        _animator.SetTrigger(AttackParamHash);
+        _animator.SetTrigger(PlayerAnimatorData.Params.AttackParamHash);
     }
 
     private void OnRan(bool state)
     {
-        _animator.SetBool(RunParamHash, state);
+        _animator.SetBool(PlayerAnimatorData.Params.RunParamHash, state);
     }
 
     private void OnMoved(bool state)
     {
-        _animator.SetBool(MoveParamHash, state);      
+        _animator.SetBool(PlayerAnimatorData.Params.MoveParamHash, state);      
     }
 
     private void OnJumped()
     {
-        _animator.SetTrigger(JumpParamHash);
+        _animator.SetTrigger(PlayerAnimatorData.Params.JumpParamHash);
     }
 
     private void OnDamageTaken(float _)
     {
-        _animator.SetTrigger(HurtParamHash);
+        _animator.SetTrigger(PlayerAnimatorData.Params.HurtParamHash);
     }
 
     private void OnGroundStateChanged(bool state)
     {
-        _animator.SetBool(OnGroundParamHash, state);
+        _animator.SetBool(PlayerAnimatorData.Params.OnGroundParamHash, state);
     }
 
     private void OnDied()
     {
-        _animator.SetTrigger(DieParamHash);
+        _animator.SetTrigger(PlayerAnimatorData.Params.DieParamHash);
     }
 }

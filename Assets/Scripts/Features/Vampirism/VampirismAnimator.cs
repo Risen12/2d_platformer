@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Animator), typeof(Vampirism))]
-public class VampirismAnimatorController : MonoBehaviour
+public class VampirismAnimator : MonoBehaviour
 {
     private readonly int ActiveTimeEndedTrigger = Animator.StringToHash("ActiveTimeEnded");
 
@@ -20,13 +20,18 @@ public class VampirismAnimatorController : MonoBehaviour
         _animator = GetComponent<Animator>();
     }
 
-    private void OnEnable() => _vampirism.ActiveTimeEnded += OnActiveTimeEnded;
+    private void OnEnable() => 
+        _vampirism.ActiveTimeEnded += OnActiveTimeEnded;
 
-    private void OnDisable() => _vampirism.ActiveTimeEnded -= OnActiveTimeEnded;
+    private void OnDisable() => 
+        _vampirism.ActiveTimeEnded -= OnActiveTimeEnded;
 
-    private void OnActiveTimeEnded() => _animator.SetTrigger(ActiveTimeEndedTrigger);
+    private void OnActiveTimeEnded() => 
+        _animator.SetTrigger(ActiveTimeEndedTrigger);
 
-    private void OnEntryAnimationEnded() => EntryAnimationEnded?.Invoke();
+    private void OnEntryAnimationEnded() => 
+        EntryAnimationEnded?.Invoke();
 
-    private void OnEndAnimationEnded() => EndAnimationEnded?.Invoke();
+    private void OnEndAnimationEnded() => 
+        EndAnimationEnded?.Invoke();
 }

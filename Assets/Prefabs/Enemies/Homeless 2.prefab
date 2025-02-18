@@ -157,11 +157,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _attackPoint: {fileID: 2147441876826442248}
-  _attackRadius: 0.36
-  _attackDamage: 12
+  _attackRadius: 0.35
+  _attackDamage: 10
   _playerLayerMask:
     serializedVersion: 2
     m_Bits: 1024
+  _afterAttackDelay: 1
 --- !u!95 &6175357243453037237
 Animator:
   serializedVersion: 7

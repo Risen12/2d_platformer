@@ -17,13 +17,13 @@ public class Patroler : MonoBehaviour
         _isChasing = false;
         _enemyMover = GetComponent<EnemyMover>();
 
-        _visibleZone.EnemyEntered += onEnemyEntered;
+        _visibleZone.EnemyEntered += OnEnemyEntered;
         _visibleZone.EnemyExited += OnEnemyExited;
     }
 
     private void OnDisable()
     {
-        _visibleZone.EnemyEntered -= onEnemyEntered;
+        _visibleZone.EnemyEntered -= OnEnemyEntered;
         _visibleZone.EnemyExited -= OnEnemyExited;
     }
 
@@ -61,7 +61,7 @@ public class Patroler : MonoBehaviour
         VerifyChangeDirection(direction);
     }
 
-    private void onEnemyEntered(Vector2 playerPosition)
+    private void OnEnemyEntered(Vector2 playerPosition)
     {
         Vector2 currentPosition = new Vector2(transform.position.x, transform.position.y);
         Vector2 direction = (playerPosition - currentPosition).normalized;

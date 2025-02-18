@@ -3,23 +3,26 @@ using System.Collections;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(Mover), typeof(GroundDetector), typeof(Health))]
+[RequireComponent(typeof(PlayerRotator))]
 public class Player : MonoBehaviour
 {
     [SerializeField] private InputReader _inputReader;
     [SerializeField] private float _delayAfterAttack;
     [SerializeField] private MySceneManager _sceneManager;
-    [SerializeField] private List<TeleporController> _teleporControllers;
+    [SerializeField] private List<Teleport> _teleporControllers;
 
     private Health _health;
     private bool _isBlockAfterAttack;
     private WaitForSeconds _afterAttackDelay;
     private Mover _mover;
+    private PlayerRotator _playerRotator;
     private GroundDetector _groundDetector;
 
     private void Awake()
     {
         _groundDetector = GetComponent<GroundDetector>();
         _mover = GetComponent<Mover>();
+        _playerRotator = GetComponent<PlayerRotator>();
         _health = GetComponent<Health>();
 
         _isBlockAfterAttack = false;
@@ -31,7 +34,7 @@ public class Player : MonoBehaviour
         _health.DamageTaken += OnDamageTaken;
         _health.AfterDied += OnDied;
 
-        foreach (TeleporController teleporController in _teleporControllers)
+        foreach (Teleport teleporController in _teleporControllers)
             teleporController.Teleported += OnTeleported;
     }
 
@@ -40,7 +43,7 @@ public class Player : MonoBehaviour
         _health.DamageTaken -= OnDamageTaken;
         _health.AfterDied -= OnDied;
 
-        foreach (TeleporController teleporController in _teleporControllers)
+        foreach (Teleport teleporController in _teleporControllers)
             teleporController.Teleported -= OnTeleported;
     }
 
@@ -58,6 +61,8 @@ public class Player : MonoBehaviour
                 {
                     _mover.Move(_inputReader.HorizontalDirection);
                 }
+
+                _playerRotator.ChangeDirection(_inputReader.HorizontalDirection);
             }
             else
             {

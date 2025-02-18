@@ -2,12 +2,12 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TeleporController : MonoBehaviour
+public class Teleport : MonoBehaviour
 {
     [SerializeField] private Button _teleportButton;
     [SerializeField] private InputReader _inputReader;
-    [SerializeField] private Options _selectedOption;
-    [SerializeField] private FadeController _fadeController;
+    [SerializeField] private TeleportOptions _selectedOption;
+    [SerializeField] private Fader _fadeController;
 
     private bool _isPlayerInTeleportZone;
     private Coroutine _teleportCoroutine;
@@ -52,7 +52,7 @@ public class TeleporController : MonoBehaviour
         Vector2 upperPosition = new Vector2(transform.position.x, upperPositionY);
         Vector2 lowerPosition = new Vector2(transform.position.x, lowerPositionY);
 
-        if (_selectedOption == Options.UpperTeleport)
+        if (_selectedOption == TeleportOptions.UpperTeleport)
             Teleported?.Invoke(lowerPosition);
         else
             Teleported?.Invoke(upperPosition);
@@ -75,6 +75,4 @@ public class TeleporController : MonoBehaviour
             _isPlayerInTeleportZone = false;
         }
     }
-
-    private enum Options { UpperTeleport, DownTeleport }
 }

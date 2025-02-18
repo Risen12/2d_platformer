@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(VampirismAnimatorController))]
+[RequireComponent(typeof(VampirismAnimator))]
 public class Vampirism : MonoBehaviour
 {
     [SerializeField] private float _delayDuration;
@@ -12,7 +12,7 @@ public class Vampirism : MonoBehaviour
     [SerializeField] private LayerMask _enemyLayerMask;
 
     private bool _isEntryAnimationEnded;
-    private VampirismAnimatorController _animatorController;
+    private VampirismAnimator _animatorController;
     private bool _isEndAnimationEnded;
     private WaitForSeconds _delay;
     private WaitUntil _waitUntilEntryAnimationEnded;
@@ -27,7 +27,7 @@ public class Vampirism : MonoBehaviour
 
     private void Awake()
     {
-        _animatorController = GetComponent<VampirismAnimatorController>();
+        _animatorController = GetComponent<VampirismAnimator>();
         _delay = new WaitForSeconds(_delayDuration);
         _waitUntilEntryAnimationEnded = new WaitUntil(() => _isEntryAnimationEnded == true);
         _waitUntilEndAnimationEnded = new WaitUntil(() => _isEndAnimationEnded == true);
@@ -47,19 +47,21 @@ public class Vampirism : MonoBehaviour
         _animatorController.EndAnimationEnded += OnEndAnimationEnded;
     }
 
-    private void OnEntryAnimationEnded() => _isEntryAnimationEnded = true;
-
-    private void OnEndAnimationEnded() => _isEndAnimationEnded = true;
-
     public void Activate()
     {
-        if(_phaseCoroutine != null)
+        if (_phaseCoroutine != null)
             StopCoroutine(_phaseCoroutine);
 
         Activated?.Invoke();
         _phaseCoroutine = StartCoroutine(StartActivePhase());
         _vampireCoroutine = StartCoroutine(UseAbility());
     }
+
+    private void OnEntryAnimationEnded() => 
+        _isEntryAnimationEnded = true;
+
+    private void OnEndAnimationEnded() => 
+        _isEndAnimationEnded = true;
 
     private IEnumerator StartActivePhase()
     {
@@ -84,7 +86,7 @@ public class Vampirism : MonoBehaviour
 
     private Collider2D[] ScanForEnemies()
     {
-        float radius = 1.5f;
+        float radius = 2f;
 
         Collider2D[] targets = Physics2D.OverlapCircleAll(transform.position, radius, _enemyLayerMask);
 

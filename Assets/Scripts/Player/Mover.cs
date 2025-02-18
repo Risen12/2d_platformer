@@ -9,27 +9,22 @@ public class Mover : MonoBehaviour
     [SerializeField] private float _jumpSpeed;
 
     private bool _isMoving;
-    private float _leftRotationY;
     private Rigidbody2D _rigidbody;
 
     public event Action<bool> Moved;
     public event Action<bool> Ran;
     public event Action Jumped;
-    public event Action DirectionChanged;
 
     public bool IsMoving => _isMoving;
 
     private void Awake()
     {
-        _leftRotationY = -180f;
-
         _rigidbody = GetComponent<Rigidbody2D>();
     }
 
     public void Move(float direction, bool isRunning = false)
     {
         MoveStateChanged(true);
-        ChangeDirection(direction);
 
         if (isRunning)
         {
@@ -74,20 +69,5 @@ public class Mover : MonoBehaviour
     {
         _isMoving = state;
         Moved?.Invoke(state);
-    }
-
-    private void ChangeDirection(float direction)
-    {
-        Quaternion leftRotation = Quaternion.Euler(0, _leftRotationY, 0);
-        DirectionChanged?.Invoke();
-
-        if (direction > 0)
-        {
-            transform.rotation = Quaternion.identity;
-        }
-        else
-        {
-            transform.rotation = leftRotation;
-        }
     }
 }

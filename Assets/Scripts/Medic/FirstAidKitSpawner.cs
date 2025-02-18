@@ -24,7 +24,8 @@ public class FirstAidKitSpawner : MonoBehaviour
         }
     }
 
-    private bool ValidatePosition(Vector2 position) => !_blockedPositions.Contains(position);
+    private bool ValidatePosition(Vector2 position) => 
+        _blockedPositions.Contains(position) == false;
 
     private Vector2 GetPosition()
     {

@@ -4,11 +4,6 @@ using UnityEngine;
 [RequireComponent(typeof(Health))]
 public class EnemyAnimatorController : MonoBehaviour
 {
-    private readonly int MoveParamHash = Animator.StringToHash("isMoving");
-    private readonly int DieParamHash = Animator.StringToHash("Die");
-    private readonly int AttackParamHash = Animator.StringToHash("Attack");
-    private readonly int HurtParamHash = Animator.StringToHash("IsAttacked");
-
     private Animator _animator;
     private EnemyMover _enemyMover;
     private Enemy _enemy;
@@ -40,21 +35,21 @@ public class EnemyAnimatorController : MonoBehaviour
 
     private void OnDied()
     {
-        _animator.SetTrigger(DieParamHash);
+        _animator.SetTrigger(EnemyAnimatorData.Params.DieParamHash);
     }
 
     private void OnMoveStateChanged(bool state)
     {
-        _animator.SetBool(MoveParamHash, state);
+        _animator.SetBool(EnemyAnimatorData.Params.MoveParamHash, state);
     }
 
     private void OnDamageTaken(float _)
     {
-        _animator.SetTrigger(HurtParamHash);
+        _animator.SetTrigger(EnemyAnimatorData.Params.HurtParamHash);
     }
 
     private void OnAttacked()
     {
-        _animator.SetTrigger(AttackParamHash);
+        _animator.SetTrigger(EnemyAnimatorData.Params.AttackParamHash);
     }
 }

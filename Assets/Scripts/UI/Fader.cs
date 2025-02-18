@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class FadeController : MonoBehaviour
+public class Fader : MonoBehaviour
 {
     [SerializeField] private Image _fadeImage;
     [SerializeField] private float _delayDuration;

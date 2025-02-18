@@ -38,7 +38,7 @@ public class BulletSpawner : MonoBehaviour
         Vector2 playerDirection = _mover.GetCurrentDirection();
 
         bullet.transform.position = GetStartPosition();
-        bullet.SetDirection(playerDirection);
+        bullet.RotateToDirection(playerDirection);
         bullet.gameObject.SetActive(true);
 
         Vector2 direction;
@@ -53,7 +53,8 @@ public class BulletSpawner : MonoBehaviour
         bullet.CollisionHappened += OnBulletCollide;
     }
 
-    private Bullet CreateBullet() => Instantiate(_bulletPrefab, _mover.GetCurrentPosition(), Quaternion.identity);
+    private Bullet CreateBullet() => 
+        Instantiate(_bulletPrefab, _mover.GetCurrentPosition(), Quaternion.identity);
 
     private void OnBulletCollide(Bullet bullet)
     {

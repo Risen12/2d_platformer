@@ -400,6 +400,7 @@ MonoBehaviour:
   _playerLayerMask:
     serializedVersion: 2
     m_Bits: 1024
+  _afterAttackDelay: 1
 --- !u!95 &3354763447695378144
 Animator:
   serializedVersion: 7

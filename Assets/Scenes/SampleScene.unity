@@ -1563,6 +1563,9 @@ MonoBehaviour:
   _indicator: {fileID: 1928727484}
   _takingHealthPerTime: 10
   _activeTime: 6
+  _enemyLayerMask:
+    serializedVersion: 2
+    m_Bits: 2048
 --- !u!114 &544928712
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2026,7 +2029,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _targetRotation: {x: 0, y: 0, z: 0}
-  _mover: {fileID: 1468248751}
+  _playerRotator: {fileID: 1468248761}
 --- !u!1 &761048410
 GameObject:
   m_ObjectHideFlags: 0
@@ -3558,6 +3561,7 @@ GameObject:
   - component: {fileID: 1468248758}
   - component: {fileID: 1468248757}
   - component: {fileID: 1468248759}
+  - component: {fileID: 1468248761}
   - component: {fileID: 1468248760}
   m_Layer: 10
   m_Name: Hero
@@ -3867,6 +3871,18 @@ MonoBehaviour:
   _inputReader: {fileID: 977991952}
   _vampirism: {fileID: 544928711}
   _reloader: {fileID: 616657906}
+--- !u!114 &1468248761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1468248745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f4c469bc509260458a28f6a05f43d07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1488276015
 GameObject:
   m_ObjectHideFlags: 0
@@ -5172,6 +5188,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Homeless
       objectReference: {fileID: 0}
+    - target: {fileID: 1403308286131795813, guid: 13af13e8abf922c4a9a0bcaa3c225843, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3052857915421670871, guid: 13af13e8abf922c4a9a0bcaa3c225843, type: 3}
       propertyPath: '_patrolPoints.Array.data[0]'
       value: 
@@ -5300,6 +5320,10 @@ PrefabInstance:
     - target: {fileID: 9110069159915170156, guid: 831c3ffdff5017d43bbc6371c0b95356, type: 3}
       propertyPath: m_Name
       value: Homeless
+      objectReference: {fileID: 0}
+    - target: {fileID: 9110069159915170156, guid: 831c3ffdff5017d43bbc6371c0b95356, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5448,6 +5472,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Homeless
       objectReference: {fileID: 0}
+    - target: {fileID: 7978457951563214834, guid: 3280bf68b7893054a908a1a94c794656, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8849655395221442338, guid: 3280bf68b7893054a908a1a94c794656, type: 3}
+      propertyPath: _afterAttackDelay
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5481,6 +5513,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1812246687617264357, guid: 00eaa88ddf98e8f4bbc7995ca4c1853e, type: 3}
+      propertyPath: m_Value
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3172924762476671524, guid: 00eaa88ddf98e8f4bbc7995ca4c1853e, type: 3}
       propertyPath: m_Name
       value: HealthBarTwoColors
@@ -5497,6 +5533,10 @@ PrefabInstance:
       propertyPath: _mover
       value: 
       objectReference: {fileID: 1468248751}
+    - target: {fileID: 6261882906420568256, guid: 00eaa88ddf98e8f4bbc7995ca4c1853e, type: 3}
+      propertyPath: _playerRotator
+      value: 
+      objectReference: {fileID: 1468248761}
     - target: {fileID: 7588291852557580314, guid: 00eaa88ddf98e8f4bbc7995ca4c1853e, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -5583,6 +5623,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7620060414805320389, guid: 00eaa88ddf98e8f4bbc7995ca4c1853e, type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7620060414805320389, guid: 00eaa88ddf98e8f4bbc7995ca4c1853e, type: 3}
+      propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8919498951441848869, guid: 00eaa88ddf98e8f4bbc7995ca4c1853e, type: 3}

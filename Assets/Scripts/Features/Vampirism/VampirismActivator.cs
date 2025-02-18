@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Health))]
-public class VampirismController : MonoBehaviour
+public class VampirismActivator : MonoBehaviour
 {
     [SerializeField] private InputReader _inputReader;
     [SerializeField] private Vampirism _vampirism;

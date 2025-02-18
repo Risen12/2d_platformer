@@ -1,10 +1,10 @@
 using UnityEngine;
 
 [RequireComponent(typeof(RectTransform))]
-public class RotationController : MonoBehaviour
+public class EnemyRotator : MonoBehaviour
 {
     [SerializeField] private Vector3 _targetRotation;
-    [SerializeField] private Mover _mover;
+    [SerializeField] private EnemyMover _enemyMover;
 
     private RectTransform _rectTransform;
 
@@ -15,12 +15,12 @@ public class RotationController : MonoBehaviour
 
     private void OnEnable()
     {
-        _mover.DirectionChanged += OnDirectionChanged;
+        _enemyMover.DirectionChanged += OnDirectionChanged;
     }
 
     private void OnDisable()
     {
-        _mover.DirectionChanged -= OnDirectionChanged;
+        _enemyMover.DirectionChanged -= OnDirectionChanged;
     }
 
     private void OnDirectionChanged()

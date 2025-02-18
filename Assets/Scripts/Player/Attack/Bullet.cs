@@ -34,7 +34,7 @@ public class Bullet : MonoBehaviour
         _rigidbody2D.AddForce(direction * _speed, ForceMode2D.Impulse);
     }
 
-    public void SetDirection(Vector2 direction)
+    public void RotateToDirection(Vector2 direction)
     {
         float leftRotationY = -180f;
         Quaternion leftRotation = Quaternion.Euler(0, leftRotationY, 0);

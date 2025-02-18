@@ -8,7 +8,7 @@ public class PlayerCamera : MonoBehaviour
     [SerializeField] private float _rightBorder;
     [SerializeField] private float _topBorder;
     [SerializeField] private float _bottomBorder;
-    [SerializeField] private List<TeleporController> _teleportControllers;
+    [SerializeField] private List<Teleport> _teleportControllers;
 
     private float _positionZ;
     private float _sewerBottomBorder;
@@ -23,7 +23,7 @@ public class PlayerCamera : MonoBehaviour
 
     private void OnEnable()
     {
-        foreach (TeleporController teleporController in _teleportControllers)
+        foreach (Teleport teleporController in _teleportControllers)
         {
             teleporController.Teleported += OnTeleported;
         }
@@ -31,7 +31,7 @@ public class PlayerCamera : MonoBehaviour
 
     private void OnDisable()
     {
-        foreach (TeleporController teleporController in _teleportControllers)
+        foreach (Teleport teleporController in _teleportControllers)
         {
             teleporController.Teleported -= OnTeleported;
         }
