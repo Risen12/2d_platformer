@@ -1,112 +1,127 @@
 using System;
 using System.Collections;
+using UnityEditor.Rendering;
 using UnityEngine;
 
-[RequireComponent(typeof(VampirismAnimator))]
+[RequireComponent(typeof(SpriteRenderer))]
 public class Vampirism : MonoBehaviour
 {
-    [SerializeField] private float _delayDuration;
-    [SerializeField] private VampirismIndicator _indicator;
+    [SerializeField] private float _reloadTime = 4f;
     [SerializeField] private float _takingHealthPerTime;
     [SerializeField] private float _activeTime = 6f;
     [SerializeField] private LayerMask _enemyLayerMask;
+    [SerializeField] private float _vampirismDelay;
+    [SerializeField] private VampirismIndicator _vampirismIndicator;
+    [SerializeField] private Health _playerHealth;
 
-    private bool _isEntryAnimationEnded;
-    private VampirismAnimator _animatorController;
+    private bool _isReady;
     private bool _isEndAnimationEnded;
-    private WaitForSeconds _delay;
-    private WaitUntil _waitUntilEntryAnimationEnded;
-    private WaitUntil _waitUntilEndAnimationEnded;
-    private Coroutine _phaseCoroutine;
-    private Coroutine _vampireCoroutine;
+    private bool _isButtonPressed;
+    private SpriteRenderer _spriteRenderer;
+    private WaitUntil _waitButtonPressed;
+    private WaitUntil _waitEndAnimationEnded;
+    private WaitForSeconds _waitReload;
+    private VampirismAnimator _vampirismAnimator;
 
-    public event Action<float> HealthTaken;
     public event Action ActiveTimeEnded;
-    public event Action Activated;
-    public event Action VisibleTimeEnded;
+    public event Action ActiveTimeStarted;
 
     private void Awake()
     {
-        _animatorController = GetComponent<VampirismAnimator>();
-        _delay = new WaitForSeconds(_delayDuration);
-        _waitUntilEntryAnimationEnded = new WaitUntil(() => _isEntryAnimationEnded == true);
-        _waitUntilEndAnimationEnded = new WaitUntil(() => _isEndAnimationEnded == true);
-    }
-
-    private void OnEnable()
-    {
+        _isButtonPressed = false;
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _spriteRenderer.enabled = false;
+        _isReady = true;
         _isEndAnimationEnded = false;
-        _isEntryAnimationEnded = false;
-        _animatorController.EntryAnimationEnded += OnEntryAnimationEnded;
-        _animatorController.EndAnimationEnded += OnEndAnimationEnded;
+
+        _waitButtonPressed = new WaitUntil(() => _isButtonPressed == true);
+        _waitEndAnimationEnded = new WaitUntil(() => _isEndAnimationEnded == true);
+        _waitReload = new WaitForSeconds(_reloadTime);
+        _vampirismAnimator = GetComponent<VampirismAnimator>();
     }
 
-    private void OnDisable()
-    {
-        _animatorController.EntryAnimationEnded -= OnEntryAnimationEnded;
-        _animatorController.EndAnimationEnded += OnEndAnimationEnded;
-    }
+    private void Start() => StartCoroutine(Launch());
+
+    private void OnEnable() => _vampirismAnimator.EndAnimationEnded += OnEndAnimationEnded;
+
+    private void OnDisable() =>_vampirismAnimator.EndAnimationEnded -= OnEndAnimationEnded;
 
     public void Activate()
     {
-        if (_phaseCoroutine != null)
-            StopCoroutine(_phaseCoroutine);
+        if (_isReady == false)
+            return;
 
-        Activated?.Invoke();
-        _phaseCoroutine = StartCoroutine(StartActivePhase());
-        _vampireCoroutine = StartCoroutine(UseAbility());
+        _isButtonPressed = true;
     }
 
-    private void OnEntryAnimationEnded() => 
-        _isEntryAnimationEnded = true;
+    private void OnEndAnimationEnded() => _isEndAnimationEnded = true;
 
-    private void OnEndAnimationEnded() => 
-        _isEndAnimationEnded = true;
-
-    private IEnumerator StartActivePhase()
+    private IEnumerator Launch()
     {
-        yield return _waitUntilEntryAnimationEnded;
-
-        _indicator.LaunchLowingIndicator(0f, _activeTime);
-
-        float time = 0f;
-
-        while (time < _activeTime)
+        while (gameObject.activeSelf)
         {
-            time += Time.deltaTime;
+            yield return _waitButtonPressed;
 
-            yield return null;
+            ActiveTimeStarted?.Invoke();
+            _isReady = false;
+            _isButtonPressed = false;
+            _spriteRenderer.enabled = true;
+            _vampirismIndicator.LaunchLowingIndicator(0f, _activeTime);
+
+            float time = 0f;
+            float tempTime = 0f;
+
+            while (time < _activeTime)
+            {
+                time += Time.deltaTime;
+                tempTime += Time.deltaTime;
+
+                if (tempTime >= _vampirismDelay)
+                {
+                    ScanEnemies();
+                    tempTime = 0f;
+                }
+
+                yield return null;
+            }
+
+            ActiveTimeEnded?.Invoke();
+            _vampirismIndicator.LaucnhRisingIndicator(0, _reloadTime);
+            yield return _waitEndAnimationEnded;
+            _spriteRenderer.enabled = false;
+            yield return _waitReload;
+            _isReady = true;
+            _isEndAnimationEnded = false;
         }
-
-        ActiveTimeEnded?.Invoke();
-        StopCoroutine(_vampireCoroutine);
-        yield return _waitUntilEndAnimationEnded;
-        VisibleTimeEnded?.Invoke();
     }
 
-    private Collider2D[] ScanForEnemies()
+    private void ScanEnemies()
     {
-        float radius = 2f;
+        float radius = 2.5f;
 
         Collider2D[] targets = Physics2D.OverlapCircleAll(transform.position, radius, _enemyLayerMask);
 
-        return targets;
+        if (targets.Length > 0)
+        {
+            Health enemy = GetClosestEnemy(targets);
+            TakeHealthFromEnemy(enemy);
+        }
     }
 
-    private Health DefineNearestEnemy(Collider2D[] targets)
+    private Health GetClosestEnemy(Collider2D[] targets)
     {
         Health nearestTarget = null;
         float nearestDistance = float.MaxValue;
 
         foreach (Collider2D target in targets)
         {
-            float distance = Vector2.Distance(transform.position, target.transform.position);
+            float distance = (target.transform.position - transform.position).sqrMagnitude;
 
-            if (distance < nearestDistance)
+            if (distance < nearestDistance * nearestDistance)
             {
                 nearestDistance = distance;
 
-                if(target.gameObject.TryGetComponent(out Health health))
+                if (target.gameObject.TryGetComponent(out Health health))
                     nearestTarget = health;
             }
         }
@@ -114,20 +129,17 @@ public class Vampirism : MonoBehaviour
         return nearestTarget;
     }
 
-    private IEnumerator UseAbility()
+    private void TakeHealthFromEnemy(Health enemy)
     {
-        while (gameObject.activeSelf)
+        if (enemy.CurrentHealth < _takingHealthPerTime)
         {
-            Collider2D[] targets = ScanForEnemies();
-
-            if (targets.Length > 0)
-            { 
-                Health target = DefineNearestEnemy(targets);
-                target.TakeDamage(_takingHealthPerTime);
-                HealthTaken?.Invoke(_takingHealthPerTime);
-            }
-
-            yield return _delay;
+            _playerHealth.Restore(enemy.CurrentHealth);
+            enemy.TakeDamage(enemy.CurrentHealth);
+        }
+        else
+        {
+            enemy.TakeDamage(_takingHealthPerTime);
+            _playerHealth.Restore(_takingHealthPerTime);
         }
     }
 }

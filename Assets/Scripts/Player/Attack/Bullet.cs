@@ -4,8 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Bullet : MonoBehaviour
 {
-    private const string GroundLayerName = "Ground";
-
+    [SerializeField] private LayerMask _collisionLayer;
     [SerializeField] private float _speed;
     [Range(10, 25)]
     [SerializeField] private float _damagePerShot;
@@ -23,7 +22,7 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.TryGetComponent(out Enemy enemy) || collision.gameObject.layer == LayerMask.NameToLayer(GroundLayerName))
+        if ((_collisionLayer.value & (1 << collision.gameObject.layer)) > 0)
         {
             CollisionHappened?.Invoke(this);
         }
@@ -34,12 +33,12 @@ public class Bullet : MonoBehaviour
         _rigidbody2D.AddForce(direction * _speed, ForceMode2D.Impulse);
     }
 
-    public void RotateToDirection(Vector2 direction)
+    public void RotateToDirection(float rotateValueY)
     {
         float leftRotationY = -180f;
         Quaternion leftRotation = Quaternion.Euler(0, leftRotationY, 0);
 
-        if (direction == Vector2.left)
+        if (rotateValueY == leftRotationY || rotateValueY == -leftRotationY)
             transform.rotation = leftRotation;
         else
             transform.rotation = Quaternion.identity;

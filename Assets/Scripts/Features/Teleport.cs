@@ -39,7 +39,7 @@ public class Teleport : MonoBehaviour
         if(_teleportCoroutine != null)
             StopCoroutine(_teleportCoroutine);
 
-        StartCoroutine(_fadeController.FadeInAndOut());
+        _teleportCoroutine = StartCoroutine(_fadeController.FadeInAndOut());
     }
 
     private void OnFadedIn()

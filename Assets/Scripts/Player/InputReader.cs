@@ -6,15 +6,18 @@ public class InputReader : MonoBehaviour
     private const string HorizontalAxis = "Horizontal";
     private const string VerticalAxis = "Vertical";
 
+    [SerializeField] private Vampirism _vampirism;
+
     private float _horizontalDirection;
     private float _verticalDirection;
     private KeyCode _runButton;
     private KeyCode _teleportButton;
     private KeyCode _vampirismButton;
+    private KeyCode _attackButton;
     private bool _isRunning;
 
     public event Action TeleportButtonPressed;
-    public event Action VamprisimButtonPressed;
+    public event Action AttackButtonPressed;
 
     public float VerticalDirection => _verticalDirection;
     public float HorizontalDirection => _horizontalDirection;
@@ -25,6 +28,7 @@ public class InputReader : MonoBehaviour
         _teleportButton = KeyCode.T;
         _runButton = KeyCode.LeftShift;
         _vampirismButton = KeyCode.V;
+        _attackButton = KeyCode.F;
     }
 
     private void Update()
@@ -44,7 +48,10 @@ public class InputReader : MonoBehaviour
         if (Input.GetKeyDown(_teleportButton))
             TeleportButtonPressed?.Invoke();
 
-        if(Input.GetKeyDown(_vampirismButton))
-            VamprisimButtonPressed?.Invoke();
+        if (Input.GetKeyDown(_vampirismButton))
+            _vampirism.Activate();
+
+        if(Input.GetKeyDown(_attackButton))
+            AttackButtonPressed?.Invoke();
     }
 }

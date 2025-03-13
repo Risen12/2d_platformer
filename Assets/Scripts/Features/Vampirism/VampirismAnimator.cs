@@ -5,13 +5,11 @@ using UnityEngine;
 public class VampirismAnimator : MonoBehaviour
 {
     private readonly int ActiveTimeEndedTrigger = Animator.StringToHash("ActiveTimeEnded");
-
-    [SerializeField] private VampirismReloader _vampirismReloader;
+    private readonly int ActiveTimeStartedTrigger = Animator.StringToHash("ActiveTimeStarted");
 
     private Animator _animator;
     private Vampirism _vampirism;
 
-    public event Action EntryAnimationEnded;
     public event Action EndAnimationEnded;
 
     private void Awake()
@@ -20,18 +18,21 @@ public class VampirismAnimator : MonoBehaviour
         _animator = GetComponent<Animator>();
     }
 
-    private void OnEnable() => 
+    private void OnEnable()
+    {
         _vampirism.ActiveTimeEnded += OnActiveTimeEnded;
+        _vampirism.ActiveTimeStarted += OnActiveTimeStarted;
+    } 
 
-    private void OnDisable() => 
+    private void OnDisable()
+    {
+        _vampirism.ActiveTimeStarted -= OnActiveTimeStarted;
         _vampirism.ActiveTimeEnded -= OnActiveTimeEnded;
+    } 
 
-    private void OnActiveTimeEnded() => 
-        _animator.SetTrigger(ActiveTimeEndedTrigger);
+    private void OnActiveTimeEnded() => _animator.SetTrigger(ActiveTimeEndedTrigger);
 
-    private void OnEntryAnimationEnded() => 
-        EntryAnimationEnded?.Invoke();
+    private void OnActiveTimeStarted() => _animator.SetTrigger(ActiveTimeStartedTrigger);
 
-    private void OnEndAnimationEnded() => 
-        EndAnimationEnded?.Invoke();
+    private void EndTimeEnded() => EndAnimationEnded?.Invoke();
 }

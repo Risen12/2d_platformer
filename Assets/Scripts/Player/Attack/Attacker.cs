@@ -6,7 +6,8 @@ using UnityEngine;
 public class Attacker : MonoBehaviour
 {
     [SerializeField] private BulletSpawner _bulletSpawner;
-    
+    [SerializeField] private InputReader _inputReader;
+
     private GroundDetector _groundDetector;
     private Mover _mover;
     private Coroutine _animationBeforeShot;
@@ -23,27 +24,27 @@ public class Attacker : MonoBehaviour
         _groundDetector = GetComponent<GroundDetector>();
     }
 
+    private void OnEnable()
+    {
+        _inputReader.AttackButtonPressed += OnAttackButtonPressed;
+    }
+
     private void OnDisable()
     {
+        _inputReader.AttackButtonPressed -= OnAttackButtonPressed;
+
         if (_animationBeforeShot != null)
             StopCoroutine(_animationBeforeShot);
     }
 
-    private void Update()
+    private void OnAttackButtonPressed()
     {
-        Shot();
-    }
-
-    private void Shot()
-    {
-        KeyCode attackButton = KeyCode.F;
-
-        if (Input.GetKeyDown(attackButton) && _groundDetector.IsGrounded && _mover.IsMoving == false)
+        if (_groundDetector.IsGrounded && _mover.IsMoving == false)
         {
             Attacked?.Invoke();
 
-            if(_animationBeforeShot != null)
-                StopCoroutine( _animationBeforeShot);
+            if (_animationBeforeShot != null)
+                StopCoroutine(_animationBeforeShot);
 
             _animationBeforeShot = StartCoroutine(ShotAfterAnimation());
         }

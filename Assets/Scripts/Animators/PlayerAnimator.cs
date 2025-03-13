@@ -1,23 +1,22 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Mover), typeof(Attacker), typeof(Animator))]
-[RequireComponent(typeof(BoxCollider2D), typeof(GroundDetector), typeof(Health))]
-public class PlayerAnimatorController : MonoBehaviour
+[RequireComponent(typeof(Animator))]
+public class PlayerAnimator : MonoBehaviour
 {
-    private Mover _mover;
-    private GroundDetector _groundDetector;
-    private Attacker _attacker;
+    [SerializeField] private Mover _mover;
+    [SerializeField] private GroundDetector _groundDetector;
+    [SerializeField] private Attacker _attacker;
+    [SerializeField] private Health _health;
+
     private Animator _animator;
-    private Health _health;
 
     private void Awake()
     {
-        _mover = GetComponent<Mover>();
-        _health = GetComponent<Health>();
-        _attacker = GetComponent<Attacker>();
         _animator = GetComponent<Animator>();
-        _groundDetector = GetComponent<GroundDetector>();
+    }
 
+    private void OnEnable()
+    {
         _mover.Jumped += OnJumped;
         _mover.Moved += OnMoved;
         _mover.Ran += OnRan;

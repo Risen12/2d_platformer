@@ -7,6 +7,7 @@ public class Mover : MonoBehaviour
     [SerializeField] private float _walkSpeed;
     [SerializeField] private float _runSpeed;
     [SerializeField] private float _jumpSpeed;
+    [SerializeField] private Rotator _rotator;
 
     private bool _isMoving;
     private Rigidbody2D _rigidbody;
@@ -44,16 +45,6 @@ public class Mover : MonoBehaviour
         Jumped?.Invoke();
     }
 
-    public Vector2 GetCurrentPosition() => transform.position;
-
-    public Vector2 GetCurrentDirection()
-    {
-        if (transform.rotation.y != 0)
-            return Vector2.left;
-        else
-            return Vector2.right;
-    }
-
     public void Stop()
     {
         Ran?.Invoke(false);
@@ -62,7 +53,14 @@ public class Mover : MonoBehaviour
 
     private void MoveWithSpeed(float speed)
     {
-        transform.Translate(Vector2.right * speed * Time.deltaTime);
+        if (_rotator.CurrentRotationY == 0)
+        {
+            transform.Translate(Vector2.right * speed * Time.deltaTime);
+        }
+        else
+        {
+            transform.Translate(Vector2.left * speed * Time.deltaTime);
+        }
     }
 
     private void MoveStateChanged(bool state)

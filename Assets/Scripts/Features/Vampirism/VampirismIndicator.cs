@@ -5,7 +5,6 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Slider))]
 public class VampirismIndicator : MonoBehaviour
 {
-    [SerializeField] private VampirismReloader _vampirismReloader;
     [SerializeField] private Vampirism _vampirism;
 
     private Slider _reloadIndicator;
